@@ -1,0 +1,21 @@
+.search {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-family: "Inter";
+}
+
+.search>input {
+    min-width: 200px;
+    padding: 20px 0;
+    padding-left: 15px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+    outline: none;
+    border: 1px solid rgba(0, 0, 0, 0.24);
+    font-family: "Inter";
+    border-radius: 12px;
+    font-size: 15px;
+}

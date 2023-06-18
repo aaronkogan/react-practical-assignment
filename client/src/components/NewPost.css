@@ -1,0 +1,27 @@
+.NewPost {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: right;
+   /* height: 100hv;*/
+    font-family: 'Inter';
+}
+
+.NewPost>button {
+    margin-left: 10px; 
+    margin-top: 10px; 
+    margin-bottom: 10px; 
+    border: 1px solid #280145;
+    background-color: #026d2b;
+    color: white;
+    font-size: 14px;
+    font-family: "Inter";
+    border-radius: 20px;
+}
+
+.NewPost>button:hover
+{
+    border: 1px solid #285603;
+    background-color: #5ccc00;
+    color: #ffffff;
+}
