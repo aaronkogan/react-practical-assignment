@@ -20,27 +20,9 @@ const Posts = () => {
         return (
             <div className="posts">
                 <article role="main">
-                <div>
-                    One
-                </div>
-                <div>
-                    Two
-                </div>
-                <div>
-                    Three
-                </div>
-                <div>
-                    Four
-                </div>
-                <div>
-                    Five
-                </div>
-                <div>
-                    Six
-                </div>
-                <div>
-                    Seven
-                </div>
+                    {parseResult.map((post, i) => (
+                            <div key={i+1}>{post} | {i+1} | </div>
+                        ))}
                 </article>
 {/* <table>
         <thead>
@@ -72,15 +54,6 @@ const Posts = () => {
           })}
         </tbody>
       </table> */}
-      <table>
-            <tbody>
-                <tr>
-                    {parseResult.map((post, i) => (
-                        <td key={i+1}>{post} | {i+1} | </td>
-                    ))}
-                </tr>
-            </tbody>
-        </table>
                 <p>
                 {postsCount}
                 </p>
