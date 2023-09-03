@@ -39,6 +39,7 @@ function useDebounce(value, delay) {
 
 const Search = () => {
 	const dispatch = useDispatch();
+  
 	const fetchSearch = async (query, cb) => {
 		console.warn('fetching ' + query);
 		const res = await fetch(query, {method: 'GET', headers: {'Content-Type':'Authorization'}});
@@ -58,11 +59,11 @@ const Search = () => {
 
   const debouncedFetchData = debounce((query, cb) => {
 		fetchSearch('http://localhost:8080/post/search/'+query, cb);
-	  }, 500);
+	  }, 1500);
 
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
-  const debouncedSearchTerm = useDebounce(query, 500);
+  const debouncedSearchTerm = useDebounce(query, 1500);
     useEffect(() => {
 		query ? debouncedFetchData(query, res => {
 			setResults(res);

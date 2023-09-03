@@ -40,10 +40,10 @@ const Posts = () => {
 
   console.log("88888 "+JSON.stringify(parseResult));
     return (
-    <div>
+      <div>
       <div className="posts">
       <article role="main">
-        {currentPosts}
+      {currentPosts}
       </article>
       </div>
       <Pagination
