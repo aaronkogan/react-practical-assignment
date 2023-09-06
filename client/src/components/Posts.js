@@ -32,9 +32,9 @@ const Posts = () => {
     renderData(result);
   }    
   // get current post
-  const indexOfLastPost = currentPage * postsPerPage; // 1 * 10 = 10
-  const indexOfFirstPost = indexOfLastPost - postsPerPage; // 10 - 10 = 0
-  const currentPosts = parseResult.slice(indexOfFirstPost, indexOfLastPost); // 0 to 10
+  const indexOfLastPost = currentPage * postsPerPage; 
+  const indexOfFirstPost = indexOfLastPost - postsPerPage;
+  const currentPosts = parseResult.slice(indexOfFirstPost, indexOfLastPost);
   const paginate = pageNumber => setCurrentPage(pageNumber);
 
 
