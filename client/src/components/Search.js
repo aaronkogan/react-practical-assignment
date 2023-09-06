@@ -12,6 +12,11 @@ class Search extends Component {
     this.searchValue = _.debounce(this.searchValue, 1000);
   }
 
+  async componentDidMount() {
+    console.log('Fist fetching');
+    this.fetchPosts('http://localhost:8080/post/')
+  }
+  
   async fetchSearch(query){
     console.warn('fetching ' + query);
     const res = await fetch(query, {method: 'GET', headers: {'Content-Type':'Authorization'}});
