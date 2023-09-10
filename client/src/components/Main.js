@@ -4,7 +4,6 @@ import Search from './Search';
 import Posts from './Posts';
 import AddPost from './NewPost';
 
-
 const Main = () => {
   return (
     <div>

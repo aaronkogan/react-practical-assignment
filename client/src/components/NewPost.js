@@ -17,7 +17,6 @@ const AddPost = () => {
       const res = await fetch(query, {method: 'GET', headers: {'Content-Type':'Authorization'}});
       const json = await res.json();
       dispatch(newPost(json));
-      console.log('##5555'+query);
       };
     const handleNewPost = (e) => {
         e.preventDefault();
