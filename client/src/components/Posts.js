@@ -44,8 +44,8 @@ const Posts = () => {
     <div>
       <div className="posts">
       <article role="main">
-      {currentPosts.map((post, i) => (
-        <div key={i+1}>{post} | {i+1} | </div>
+      {currentPosts.map((post) => (
+        <div key={post[0]}>{post} | {post[0]} | </div>
       ))}
         {currentPosts}
       </article>
