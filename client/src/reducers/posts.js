@@ -4,14 +4,13 @@ export const postsSlice = createSlice({
     name: "posts",
     initialState: {
         posts: null,
+        pageNumber: 1
     },
     reducers: {
         searchPosts: (state, action) => {
-            console.warn('Redux search posts' + JSON.stringify(action.payload));
             state.posts = action.payload;
         },
         getPosts: (state, action) => {
-            console.warn('Redux get ALL posts' + JSON.stringify(action.payload));
             state.posts = action.payload;
         },
         newPost: (state, action) => {
@@ -23,10 +22,13 @@ export const postsSlice = createSlice({
         deletePost: (state, action) => {
             state.posts = action.payload;
         },
+        currentPage: (state, action) => {
+            state.pageNumber = action.payload;
+        },
     },
 });
 
-export const { searchPosts, getPosts,newPost, editPost, deletePost } = postsSlice.actions;
+export const { searchPosts, getPosts,newPost, editPost, deletePost, currentPage } = postsSlice.actions;
 
 export const selectPosts = (state) => state.posts.posts;
 

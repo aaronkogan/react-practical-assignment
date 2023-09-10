@@ -7,7 +7,7 @@ import { getPost,editPost,deletePost,selectPosts } from "../reducers/posts";
 
 const Posts = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  const [postsPerPage] = useState(10);
+  const [postsPerPage] = useState(9);
   const posts = useSelector(selectPosts);
   let parsed = JSON.parse(JSON.stringify(posts));
   let result = {};
@@ -29,6 +29,8 @@ const Posts = () => {
       parseResult[result[i].id] = [result[i].id, result[i].title, result[i].username, result[i].imageSrc, result[i].likes, result[i].dislikes, result[i].date, result[i].comments];
     }
     parseResult.shift();
+    parseResult.reverse()
+
     renderData(result);
   }    
   // get current post
@@ -37,12 +39,14 @@ const Posts = () => {
   const currentPosts = parseResult.slice(indexOfFirstPost, indexOfLastPost);
   const paginate = pageNumber => setCurrentPage(pageNumber);
 
-
   console.log("88888 "+JSON.stringify(parseResult));
     return (
     <div>
       <div className="posts">
       <article role="main">
+      {currentPosts.map((post, i) => (
+        <div key={i+1}>{post} | {i+1} | </div>
+      ))}
         {currentPosts}
       </article>
       </div>
@@ -52,16 +56,6 @@ const Posts = () => {
         paginate={paginate}
       />
     </div>
-      //   <div className="posts">
-      //       <article role="main">
-      //           {parseResult.map((post, i) => (
-      //                   <div key={i+1}>{post} | {i+1} | </div>
-      //               ))}
-      //       </article>
-      //       <p>
-      //       {parseResult.length}
-      //       </p>
-      // </div>
     );
 };
 
