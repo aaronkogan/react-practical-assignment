@@ -20,7 +20,7 @@ const AddPost = () => {
       };
     const handleNewPost = (e) => {
         e.preventDefault();
-        postComment(url,JSON.stringify({title:'ss', username:'ssd', imageSrc:'ssss'}));
+        postComment(url,JSON.stringify({title:'ss', username:'ssd', imageSrc:''}));
       };
     return (
         <div className="NewPost">

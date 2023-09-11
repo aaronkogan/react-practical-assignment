@@ -14,9 +14,12 @@ const Posts = () => {
   if(parsed) {
     result = (parsed["result"]) 
     for(var i = 0; i < result.length; i++) {
+      if (result[i] != '')  {
       parseResult.push([result[i].id, result[i].title, result[i].username, result[i].imageSrc, result[i].likes, result[i].dislikes, result[i].date, result[i].comments]);
+      }
     }
     parseResult.reverse();
+    if (parseResult[0]) parseResult.shift();
   }    
   const indexOfLastPost = currentPage * postsPerPage; 
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
@@ -24,12 +27,10 @@ const Posts = () => {
   const paginate = pageNumber => setCurrentPage(pageNumber);
     return (
     <div>
-      <div className="posts">
-      <article role="main">
+      <div className="grid-container">
       {currentPosts.map((post, i) => (
-        <div key={post[0]}>{post} | {post[0]} | </div>
+        <div className="grid-item" key={post[0]}>{post} | {post[0]} | </div>
       ))}
-      </article>
       </div>
       <Pagination
         postsPerPage={postsPerPage}
