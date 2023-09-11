@@ -12,14 +12,13 @@ const Posts = () => {
   let result = {};
   let parseResult = [];
   if(parsed) {
-    result = (parsed["result"]) 
+    result = (parsed.result) 
     for(var i = 0; i < result.length; i++) {
       if (result[i] != '')  {
       parseResult.push([result[i].id, result[i].title, result[i].username, result[i].imageSrc, result[i].likes, result[i].dislikes, result[i].date, result[i].comments]);
       }
     }
     parseResult.reverse();
-    if (parseResult[0]) parseResult.shift();
   }    
   const indexOfLastPost = currentPage * postsPerPage; 
   const indexOfFirstPost = indexOfLastPost - postsPerPage;

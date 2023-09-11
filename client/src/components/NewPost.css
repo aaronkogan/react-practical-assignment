@@ -25,3 +25,16 @@
     background-color: #5ccc00;
     color: #ffffff;
 }
+
+.newPostModal {
+    display: flex;
+    border-radius: 12px;
+    align-items: center;
+    justify-content: right;
+    width: 460px;
+    font-family: 'Inter';
+    margin-top                   : 20%;
+    margin-left                  : 50%;
+    transform             : translate(-50%, -50%);
+    background-color       : #F0AA89;      
+    }
