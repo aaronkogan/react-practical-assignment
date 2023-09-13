@@ -7,6 +7,7 @@ const Pagination = ({ postsPerPage, totalPosts, paginate}) => {
   const dispatch = useDispatch();
   const pageNumber = useSelector(currentPage);
   const pageNumbers = [];
+  
   for(let i = 1; i <= Math.ceil(totalPosts / postsPerPage); i++) {
     pageNumbers.push(i)
   } 

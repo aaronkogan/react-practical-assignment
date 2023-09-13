@@ -32,4 +32,6 @@ export const { searchPosts, getPosts,newPost, editPost, deletePost, currentPage 
 
 export const selectPosts = (state) => state.posts.posts;
 
+export const selectPage = (state) => state.posts.pageNumber;
+
 export default postsSlice.reducer;
