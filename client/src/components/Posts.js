@@ -1,8 +1,7 @@
 import "./Posts.css";
-import React, { useState, useEffect } from "react";
 import Pagination from "./Pagination";
-import { useDispatch, useSelector } from "react-redux";
-import { getPost,editPost,deletePost,selectPosts, selectPage } from "../reducers/posts";
+import {  useSelector } from "react-redux";
+import { selectPosts, selectPage } from "../reducers/posts";
 
 const Posts = () => {
   const postsPerPage = 9;
@@ -15,7 +14,7 @@ const Posts = () => {
     result = (parsed.result) 
     for(var i = 0; i < result.length; i++) {
       if (result[i] !== '')  {
-      parseResult.push([result[i].id, result[i].title, result[i].username, result[i].imageSrc, result[i].likes, result[i].dislikes, result[i].date, result[i].comments]);
+        parseResult.push([result[i].id, result[i].title, result[i].username, result[i].imageSrc, result[i].likes, result[i].dislikes, result[i].date, result[i].comments]);
       }
     }
     parseResult.reverse();

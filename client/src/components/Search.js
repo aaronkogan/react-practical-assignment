@@ -21,15 +21,13 @@ class Search extends Component {
     console.warn('fetching ' + query);
     const res = await fetch(query, {method: 'GET', headers: {'Content-Type':'Authorization'}});
     const json = await res.json();
-    this.props.currentPage(1);
-    this.props.searchPosts(json);
+    {json.success && this.props.searchPosts(json)}
     };
   
   async fetchPosts (query) {
     console.warn('fetching ' + query);
     const res = await fetch(query, {method: 'GET', headers: {'Content-Type':'Authorization'}});
     const json = await res.json();
-    this.props.currentPage(1);
     this.props.getPosts(json);
   };
 
@@ -38,7 +36,7 @@ class Search extends Component {
     this.searchValue(query);
   }
   searchValue = (query) => {
-    (query === '' || query === undefined) ? this.fetchPosts('http://localhost:8080/post/') : this.fetchSearch('http://localhost:8080/post/search/'+query);
+    (query === '' || query[0] === ('/') || query[0] === ('\\') || query[0] === ('%') || query === undefined) ? this.fetchPosts('http://localhost:8080/post/') : this.fetchSearch('http://localhost:8080/post/search/'+query);
     }
 
   render() {
@@ -63,11 +61,8 @@ const mapDispatchToProps = dispatch => ({
 
   getPosts: (json) => (
     dispatch({ type: "posts/getPosts", payload: json })
-  ),
+  )
 
-  currentPage: (num) => (
-    dispatch({ type: "posts/currentPage", payload: num })
-  ),
 
 })
 

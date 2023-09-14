@@ -1,58 +1,106 @@
 import "./NewPost.css";
-import React, {useState} from 'react';
+import "./DragDrop.css";
+import React, { useState, useEffect, useRef} from 'react';
 import Modal from 'react-modal';
 import { useDispatch, useSelector } from "react-redux";
-import { newPost, selectPosts } from "../reducers/posts";
+import { getPosts, newPost } from "../reducers/posts";
+import { selectUser } from '../reducers/user';
 
 const AddPost = () => {
+  const dispatch = useDispatch();
+  const user = useSelector(selectUser);
+  const [title, setTitle] = useState("");
   const [modalIsOpen,setModalIsOpen] = useState(false);
   const setModalIsOpenToTrue =()=>{
       setModalIsOpen(true)
   }
   const setModalIsOpenToFalse =()=>{
-      setModalIsOpen(false)
+      setModalIsOpen(false);
+      setTitle("");
+      images[0] = undefined;
+      imagesURLs[0] = undefined;
   }
-    const url = ('http://localhost:8080/post/')
-    const dispatch = useDispatch();
-    const postComment = async (url, query, cb) => {
-      console.warn('fetching ' + url);
-      const res = await fetch(url, {method: 'POST', headers: {'Content-Type':'application/json'}, body: query});
-      fetchPosts('http://localhost:8080/post/');
+  const url = ('http://localhost:8080/post/')
+  const postInit = async (url, query, cb) => {
+    console.warn('fetching ' + url);
+    const res = await fetch(url, {method: 'POST', headers: {'Content-Type':'application/json'}, body: query});
+    fetchPosts('http://localhost:8080/post/');
+  };
+  const fetchPosts = async (query) => {
+    console.warn('fetching ' + query);
+    const res = await fetch(query, {method: 'GET', headers: {'Content-Type':'Authorization'}});
+    const json = await res.json();
+    dispatch(newPost(json));
     };
-    const fetchPosts = async (query) => {
-      console.warn('fetching ' + query);
-      const res = await fetch(query, {method: 'GET', headers: {'Content-Type':'Authorization'}});
-      const json = await res.json();
-      dispatch(newPost(json));
-      };
-    const handleNewPost = (e) => {
-        e.preventDefault();
-        postComment(url,JSON.stringify({title:'ss', username:'ssd', imageSrc:''}));
-      };
-    return (
-      <React.Fragment>
-        <div className="NewPost">
-            <button onClick={setModalIsOpenToTrue}>New post</button>
-            <Modal onRequestClose={setModalIsOpenToFalse} isOpen={modalIsOpen} className="newPostModal">
-                <ul>
-                <input placeholder="Title" type="text"></input>
-                 <h1>Fullmetal Alchemist: Brotherhood</h1>
-                 <h1>Naruto</h1>
-                 <h1>Bleach</h1>
-                 <h1>Haikyu!!</h1>
-                 <h1>Kuroko no Basketball</h1>
-                 <h1>My hero academia</h1>
-                 <h1>One punch man</h1>   
-            </ul> 
-            <div className="NewPost">
-            <button  onClick={(e) => handleNewPost(e)}>Add post</button>
-            </div>
-            <button onClick={setModalIsOpenToFalse}>Cancel</button>
-            </Modal>
-
-            </div>
-      </React.Fragment>
-      );
+  const handleNewPost = (e) => {
+      e.preventDefault();
+      postInit(url,JSON.stringify({title: title, username: user.name}));
+      setModalIsOpenToFalse();
+    };
+  //Drag drop events
+  const [dragActive, setDragActive] = useState(false);
+  const inputRef = useRef(null);
+  const [images, setImages] = useState([]);
+  const [imagesURLs, setImageURLs] = useState([]);
+  useEffect(() => {
+    if (images.length<1) return;
+    const newImageURLs = [];
+    images.forEach(image => newImageURLs.push(URL.createObjectURL(image)));
+    setImageURLs(newImageURLs);
+  }, [images]);
+  const handleDrag = function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.type === "dragenter" || e.type === "dragover") {
+      setDragActive(true);
+    } else if (e.type === "dragleave") {
+      setDragActive(false);
+    }
+  };
+  const handleDrop = function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActive(false);
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      setImages([...e.dataTransfer.files]);
+    }
+  };
+  const handleChange = function(e) {
+    e.preventDefault();
+    if (e.target.files && e.target.files[0]) {
+      setImages([...e.target.files]);
+    }
+  };
+  const onButtonUploadClick = () => {
+    inputRef.current.click();
+  };
+  const enabled = (title.length > 0 && images[0]!== undefined);
+  return (
+    <React.Fragment>
+      <div className="NewPost">
+          <button onClick={setModalIsOpenToTrue}>New post</button>
+          <Modal onRequestClose={setModalIsOpenToFalse} isOpen={modalIsOpen} className="newPostModal" appElement={document.getElementById('root') || undefined}>
+              <input className="input_title" placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)}></input>
+              <form id="form-file-upload" onDragEnter={handleDrag} onSubmit={(e) => e.preventDefault()}>
+                <input ref={inputRef} type="file" id="input-file-upload" accept="image/*" multiple={false} onChange={handleChange} />
+                <label style={{ backgroundImage: `url(${imagesURLs[0]})`, backgroundPosition: 'center', backgroundSize: 'cover', backgroundRepeat: 'no-repeat'}} id="label-file-upload" htmlFor="input-file-upload" className={dragActive ? "drag-active" : "" }>
+                { !imagesURLs[0] && 
+                  <div>
+                    <p>Drag and drop your photo here</p>
+                    <button className="upload-button" onClick={onButtonUploadClick}>or click to select file</button>
+                  </div> 
+                }
+                </label>
+                { dragActive && <div id="drag-file-element" onDragEnter={handleDrag} onDragLeave={handleDrag} onDragOver={handleDrag} onDrop={handleDrop}></div> }
+              </form>
+      <div className="NewPost">
+          <button disabled={!enabled} onClick={(e) => handleNewPost(e)}>Add post</button>
+          <button className="cancel_button" onClick={setModalIsOpenToFalse}>Cancel</button>
+      </div>
+          </Modal>
+      </div>
+    </React.Fragment>
+    );
 };
 
 export default AddPost;
