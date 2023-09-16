@@ -16,7 +16,6 @@ const handleLogout = (e) => {
   e.preventDefault();
   dispatch(logout());
 };
-
 return (
     <div className="logout">
       <span className="user_name">{user.name}</span>
@@ -25,7 +24,6 @@ return (
       </button>
     </div>
 );
-
 };
 
 export default Header;

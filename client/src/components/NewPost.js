@@ -3,10 +3,15 @@ import "./DragDrop.css";
 import React, { useState, useEffect, useRef} from 'react';
 import Modal from 'react-modal';
 import { useDispatch, useSelector } from "react-redux";
-import { getPosts, newPost } from "../reducers/posts";
+import { getPosts } from "../reducers/posts";
 import { selectUser } from '../reducers/user';
 
 const AddPost = () => {
+  const [dragActive, setDragActive] = useState(false);
+  const inputRef = useRef(null);
+  const [images, setImages] = useState([]);
+  const [imagesURLs, setImageURLs] = useState([]);
+
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
   const [title, setTitle] = useState("");
@@ -20,28 +25,30 @@ const AddPost = () => {
       images[0] = undefined;
       imagesURLs[0] = undefined;
   }
-  const url = ('http://localhost:8080/post/')
-  const postInit = async (url, query, cb) => {
-    console.warn('fetching ' + url);
-    const res = await fetch(url, {method: 'POST', headers: {'Content-Type':'application/json'}, body: query});
-    fetchPosts('http://localhost:8080/post/');
+  const postImg = async (url, query, cb) => {
+    const formData = new FormData();
+    formData.append("picture", query);
+    const res = await fetch(url, {method: 'POST', headers: {'Accept': '/'}, body: formData});
+    const json = await res.json();
+    json.success && fetchPosts('http://localhost:8080/post/');
+  };
+  const postInit = async (query, cb) => {
+    const res = await fetch('http://localhost:8080/post/', {method: 'POST', headers: {'Content-Type':'application/json'}, body: query});
+    const json = await res.json();
+    json.success && postImg('http://localhost:8080/post/'+JSON.stringify(json.result.id)+'/picture', images[0]);
   };
   const fetchPosts = async (query) => {
     console.warn('fetching ' + query);
     const res = await fetch(query, {method: 'GET', headers: {'Content-Type':'Authorization'}});
     const json = await res.json();
-    dispatch(newPost(json));
+    dispatch(getPosts(json));
+    setModalIsOpenToFalse();
     };
   const handleNewPost = (e) => {
       e.preventDefault();
-      postInit(url,JSON.stringify({title: title, username: user.name}));
-      setModalIsOpenToFalse();
+      postInit(JSON.stringify({title: title, username: user.name}));
     };
   //Drag drop events
-  const [dragActive, setDragActive] = useState(false);
-  const inputRef = useRef(null);
-  const [images, setImages] = useState([]);
-  const [imagesURLs, setImageURLs] = useState([]);
   useEffect(() => {
     if (images.length<1) return;
     const newImageURLs = [];
