@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getPosts, preloadPostImg, selectNewPostImg } from "../reducers/posts";
 import { selectUser } from '../reducers/user';
 
-const AddPost = () => {
+const EditPost = () => {
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
   const imgPreload = useSelector(selectNewPostImg);
@@ -46,7 +46,7 @@ const AddPost = () => {
   return (
     <React.Fragment>
       <div className="NewPost">
-          <button onClick={setModalIsOpenToTrue}>New post</button>
+          <button onClick={setModalIsOpenToTrue}>Edit post</button>
           <Modal onRequestClose={setModalIsOpenToFalse} isOpen={modalIsOpen} className="newPostModal" appElement={document.getElementById('root') || undefined}>
               <input className="input_title" placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)}></input>
               <Upload />
@@ -60,4 +60,4 @@ const AddPost = () => {
     );
 };
 
-export default AddPost;
+export default EditPost;
