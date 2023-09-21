@@ -3,6 +3,8 @@
     flex-direction: row;
     align-items: center;
     justify-content: right;
+    margin-left: 300px; 
+    padding-right: 5%; 
    /* height: 100hv;*/
     font-family: 'Inter';
 }

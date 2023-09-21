@@ -1,5 +1,7 @@
 import "./Posts.css";
+import "./Panel.css";
 import Pagination from "./Pagination";
+import Panel from "./Panel";
 import { useState } from 'react';
 import {  useSelector } from "react-redux";
 import { selectPosts, selectPage } from "../reducers/posts";
@@ -9,10 +11,11 @@ const Posts = () => {
   const postsPerPage = 9;
   const posts = useSelector(selectPosts);
   const page = useSelector(selectPage);
+  const [hoverId, setHoverId] = useState(0);
   const [modalEvent, setModalEvent] = useState({
-    id: Symbol(0),
-    Event: Symbol("hide"),
-    payload: Symbol({})
+    id: 0,
+    Event: "hide",
+    payload: {}
   });
   const setModalIsOpenToTrue =(itemId, e, p)=>{
     setModalEvent({id: itemId, Event: e, payload: p});
@@ -38,9 +41,11 @@ const Posts = () => {
   const paginate = (page) => (page);
     return (
     <div>
-      <div className="grid-container">
-      {currentPosts.map((post) => (
-        <div className="grid-item" onClick={() => setModalIsOpenToTrue(post[0], "fullscreen", ({ Title : post[1], Url : post[3] }))} style={{backgroundImage: `url(${post[3]})`}} key={post[0]}>{post[1]} | {post[0]} | </div>
+      <div className="posts-container">
+      {currentPosts.map((post) => (    
+            <div className="posts-item" onMouseEnter={() => setHoverId(post[0])} onMouseLeave={() => setHoverId(0)} onClick={e => e.currentTarget === e.target && setModalIsOpenToTrue(post[0], "fullscreen", ({ Title : post[1], Author: post[2], Url : post[3] }))} style={{backgroundImage: `url(${post[3]})`}} key={post[0]}>           
+              { (hoverId === post[0]) ? <div>{post[1]}<br/>by {post[2]}<Panel id={post[0]} owner={post[2]} url={post[3]}/></div> : <div style={{color: "Background"}}>{post[1]}<br/>by {post[2]} {post[8]}</div> }
+            </div>
       ))}
       </div>
       <Pagination
@@ -48,18 +53,14 @@ const Posts = () => {
         totalPosts={parseResult.length}
         paginate={paginate}
       />
-      <Modal onRequestClose={setModalIsOpenToFalse} isOpen={modalEvent.Event !== "hide"}  appElement={document.getElementById('root') || undefined}>
+      <Modal onRequestClose={setModalIsOpenToFalse} isOpen={modalEvent.Event !== "hide"} className={`main-modal-${modalEvent.Event}`}  appElement={document.getElementById('root') || undefined}>
       {(() => {
-        if (modalEvent.Event === "hide") {
-          return (
-            <div></div>
-          )
-        } else if (modalEvent.Event === "fullscreen") {
+          if (modalEvent.Event === "fullscreen") {
           return (
             <div>
-              <h3>Fullscreen photo</h3>
-              <h1>{modalEvent.payload.Title}</h1>
-              <img alt="Fullscreen" src={modalEvent.payload.Url} onClick={setModalIsOpenToFalse} ></img>
+              {modalEvent.payload.Title} by {modalEvent.payload.Author}
+              <img onClick={e => e.currentTarget === e.target && setModalIsOpenToFalse} alt={modalEvent.payload.Title} className={`main-modal-${modalEvent.Event}-img`} src={modalEvent.payload.Url}></img>
+              <div style={{marginLeft : "70%", bottom : "-10px"}}><Panel id={modalEvent.payload.id} owner={modalEvent.payload.Author} url={modalEvent.payload.Url}/></div>
             </div>
           )
         } else if (modalEvent.Event === "deletePost") {

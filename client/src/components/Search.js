@@ -35,6 +35,7 @@ class Search extends Component {
     return (
       <div className="search">
         <input 
+        autoFocus
         placeholder="Search"
         type="text"
         onChange={(event, value) => this.onChange(event.target.value)}
