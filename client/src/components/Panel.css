@@ -5,58 +5,74 @@
     justify-content: center;
     align-items: center;
     font-family: "Inter";
-    padding-left: 33%;
     bottom : 1%;
-    z-index: 1
 }
 
 .panel>button {
     width: 40px;
     height: 20px;
-    justify-content: center;
+
+}
+
+.panelModal {
+    display: flex;
+    flex-direction: column;
     align-items: center;
-    pointer-events: none;
+    justify-content: center;
+    border-radius: 12px;
+    position: fixed;
+    padding: 10px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Inter';
+    background-color       : #b6bba0a2; 
 }
 
-@media (min-width: 150px) {
-    .panel {
-        padding-left: 0%;
-    }
+.panelModal-deletePost {
+    background-color       : #c3b398a2;  
+  }
+
+.panelModal-deletePost>div {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center; 
 }
 
-@media (min-width: 210px) {
-    .panel {
-        padding-left: 15%;
-    }
+.delete-button {
+margin-left: 10px; 
+margin-top: 10px; 
+margin-bottom: 10px; 
+border: 1px solid #280145;
+background-color: #b53232;
+color: white;
+font-size: 14px;
+font-family: "Inter";
+border-radius: 20px;
 }
 
-@media (min-width: 340px) {
-    .panel {
-        padding-left: 30%;
-    }
+.delete-button:hover
+{
+    border: 1px solid #285603;
+    background-color: #ef0b0b;
+    color: #ffffff;
 }
 
-@media (min-width: 430px) {
-    .panel {
-        padding-left: 35%;
-    }
+.cancel_button {
+    margin-left: 10px; 
+    margin-top: 10px; 
+    margin-bottom: 10px; 
+    border: 1px solid #280145;
+    background-color: #454fab;
+    color: white;
+    font-size: 14px;
+    font-family: "Inter";
+    border-radius: 20px;
 }
 
-@media (min-width: 700px) {
-    .panel {
-        padding-left: 33%;
-    }
+.cancel_button:hover {
+    border: 1px solid #450306;
+    background-color: #5291ae;
+    color: #ffffff;
 }
-  
-@media (min-width: 1500px) {
-    .panel {
-        padding-left: 35%;
-    }
-}
-
-@media (min-width: 2000px) {
-    .panel {
-        padding-left: 40%;
-    }
-}
-

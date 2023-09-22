@@ -43,61 +43,26 @@ const Posts = () => {
     <div>
       <div className="posts-container">
       {currentPosts.map((post) => (    
-            <div className="posts-item" onMouseEnter={() => setHoverId(post[0])} onMouseLeave={() => setHoverId(0)} onClick={e => e.currentTarget === e.target && setModalIsOpenToTrue(post[0], "fullscreen", ({ Title : post[1], Author: post[2], Url : post[3] }))} style={{backgroundImage: `url(${post[3]})`}} key={post[0]}>           
-              { (hoverId === post[0]) ? <div>{post[1]}<br/>by {post[2]}<Panel id={post[0]} owner={post[2]} url={post[3]}/></div> : <div style={{color: "Background"}}>{post[1]}<br/>by {post[2]} {post[8]}</div> }
+            <div className="posts-item" onMouseEnter={() => setHoverId(post[0])} onMouseLeave={() => setHoverId(0)} onClick={e => e.currentTarget === e.target && setModalIsOpenToTrue(post[0], "fullscreen", ({ title : post[1], owner: post[2], url : post[3] }))} style={{backgroundImage: `url(${post[3]})`}} key={post[0]}>           
+              {(hoverId === post[0]) ? <div><div onClick={e => e.currentTarget === e.target && setModalIsOpenToTrue(post[0], "fullscreen", ({ title : post[1], owner: post[2], url : post[3] }))}>{post[1]}<br/>by {post[2]}</div><div style={{paddingLeft : "-25%", justifyContent: "center", position: "center", display: "flex", flexDirection: "row"}}><Panel id={post[0]} title={post[1]} owner={post[2]} url={post[3]}/></div></div> : <div onClick={e => e.currentTarget === e.target && setModalIsOpenToTrue(post[0], "fullscreen", ({ title : post[1], owner: post[2], url : post[3] }))} style={{color: "Transparent"}}>{post[1]}<br/>by {post[2]} {post[8]}</div>}
             </div>
       ))}
-      </div>
       <Pagination
         postsPerPage={postsPerPage}
         totalPosts={parseResult.length}
         paginate={paginate}
       />
+    </div>
       <Modal onRequestClose={setModalIsOpenToFalse} isOpen={modalEvent.Event !== "hide"} className={`main-modal-${modalEvent.Event}`}  appElement={document.getElementById('root') || undefined}>
       {(() => {
           if (modalEvent.Event === "fullscreen") {
           return (
             <div>
-              {modalEvent.payload.Title} by {modalEvent.payload.Author}
-              <img onClick={e => e.currentTarget === e.target && setModalIsOpenToFalse} alt={modalEvent.payload.Title} className={`main-modal-${modalEvent.Event}-img`} src={modalEvent.payload.Url}></img>
-              <div style={{marginLeft : "70%", bottom : "-10px"}}><Panel id={modalEvent.payload.id} owner={modalEvent.payload.Author} url={modalEvent.payload.Url}/></div>
+              {modalEvent.payload.title} by {modalEvent.payload.owner}
+              <img onClick={e => e.currentTarget === e.target && setModalIsOpenToFalse} alt={modalEvent.payload.title} className={`main-modal-${modalEvent.Event}-img`} src={modalEvent.payload.url}></img>
+              <div  style={{paddingLeft : "-25%", justifyContent: "center", position: "center", display: "flex", flexDirection: "row"}}><Panel id={modalEvent.payload.id} title={modalEvent.payload.title} owner={modalEvent.payload.owner} url={modalEvent.payload.url}/></div>
             </div>
           )
-        } else if (modalEvent.Event === "deletePost") {
-          return (
-            <div>
-              <h3>Delete post dialog</h3>
-              <h6>{modalEvent.id}</h6>
-            </div>
-          )
-        } else if (modalEvent.Event === "editPost") {
-          return (
-            <div>
-              <h3>Edit post dialog</h3>
-              <h6>{modalEvent.Item}</h6>
-            </div>
-          )       
-        } else if (modalEvent.Event === "newComment") {
-          return (
-            <div>
-              <h3>newComment dialog</h3>
-              <h6>{modalEvent.Item}</h6>
-            </div>
-          )       
-        } else if (modalEvent.Event === "editComment") {
-          return (
-            <div>
-              <h3>editComment dialog</h3>
-              <h6>{modalEvent.Item}</h6>
-            </div>
-          )       
-        } else if (modalEvent.Event === "deleteComment") {
-          return (
-            <div>
-              <h3>Delete post dialog</h3>
-              <h6>{modalEvent.Item}</h6>
-            </div>
-          )       
         }
       })()}
       </ Modal>
