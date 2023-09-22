@@ -38,6 +38,7 @@ class Search extends Component {
         autoFocus
         placeholder="Search"
         type="text"
+        id="search"
         onChange={(event, value) => this.onChange(event.target.value)}
         value={this.state.value || undefined}
         />

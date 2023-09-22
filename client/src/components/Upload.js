@@ -1,5 +1,5 @@
 import "./Upload.css";
-import { preloadPostImg } from "../reducers/posts";
+import { preloadPostImg } from "../reducers/post";
 import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch } from "react-redux";
 

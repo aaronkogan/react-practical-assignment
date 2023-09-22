@@ -3,7 +3,8 @@ import Upload from "./Upload";
 import React, { useState } from 'react';
 import Modal from 'react-modal';
 import { useDispatch, useSelector } from "react-redux";
-import { getPosts, preloadPostImg, selectNewPostImg } from "../reducers/posts";
+import { getPosts } from "../reducers/posts";
+import { newPost, preloadPostImg, selectNewPostImg } from  "../reducers/post";
 import { selectUser } from '../reducers/user';
 
 const AddPost = () => {
@@ -20,24 +21,22 @@ const AddPost = () => {
       setTitle("");
       dispatch(preloadPostImg(0));
   }
-  const postImg = async (url, query, cb) => {
-    const formData = new FormData();
-    formData.append("picture", query);
-    const res = await fetch(url, {method: 'POST', headers: {'Accept': '/'}, body: formData});
-    const json = await res.json();
-    json.success && fetchPosts('http://localhost:8080/post/');
-  };
-  const postInit = async (query, cb) => {
+  const postInit = async (query) => {
     const res = await fetch('http://localhost:8080/post/', {method: 'POST', headers: {'Content-Type':'application/json'}, body: query});
     const json = await res.json();
     json.success && postImg('http://localhost:8080/post/'+JSON.stringify(json.result.id)+'/picture', document.getElementById('input-file-upload').files[0]);
   };
-  const fetchPosts = async (query) => {
-    const res = await fetch(query, {method: 'GET', headers: {'Content-Type':'Authorization'}});
+  const postImg = async (url, query) => {
+    const formData = new FormData();
+    formData.append("picture", query);
+    const res = await fetch(url, {method: 'POST', headers: {'Accept': '/'}, body: formData});
     const json = await res.json();
-    dispatch(getPosts(json));
-    setModalIsOpenToFalse();
-    };
+    if(json.success) {
+      json.result = { ...json.result, event: 'newPost'};
+      dispatch(newPost(json.result));
+      setModalIsOpenToFalse();
+    } 
+  };
   const handleNewPost = (e) => {
       e.preventDefault();
       postInit(JSON.stringify({title: title, username: user.name}));
