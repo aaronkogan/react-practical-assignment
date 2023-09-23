@@ -1,12 +1,12 @@
 .posts-container {
-  max-width: 1600px;
+  max-width: 1400px;
   margin: 30px auto;
   padding: 0 20px;
   width: 90vw; 
   height: 30vh;
   display: grid;
-  grid-auto-rows: 100%; 
-  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); 
+  grid-auto-rows: 95%; 
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); 
   grid-gap: 1em;
 }
 
@@ -44,16 +44,4 @@
   overflow: auto;
   max-width: 80vw;  
   max-height: 80vh; 
-}
-
-@media (min-width: 700px) {
-  .posts-container {
-    height: 20vh;
-  }
-}
-
-@media (min-width: 1000px) {
-  .posts-container {
-    height: 30vh;
-  }
 }

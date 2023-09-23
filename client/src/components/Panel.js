@@ -17,6 +17,7 @@ const Panel = (props) => {
       if(json.success) {
         json.result = { ...json.result, event: 'deletePost'};
         dispatch(deletePost(json.result));
+        setEvent("hide");
       }
     }
     return (    

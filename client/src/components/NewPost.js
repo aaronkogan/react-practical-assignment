@@ -3,7 +3,6 @@ import Upload from "./Upload";
 import React, { useState } from 'react';
 import Modal from 'react-modal';
 import { useDispatch, useSelector } from "react-redux";
-import { getPosts } from "../reducers/posts";
 import { newPost, preloadPostImg, selectNewPostImg } from  "../reducers/post";
 import { selectUser } from '../reducers/user';
 

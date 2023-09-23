@@ -1,9 +1,10 @@
 .pagination {
+  position: relative;
   width: 80vw;
   margin-top: 4px;
-  bottom: 10px;
   justify-content: center;
   align-items: center;
+  bottom: 0px;
  }
   
  .pagination>.active>button {
@@ -12,9 +13,13 @@
  }
 
  .pagination>ul {
- list-style: none;
- display: flex;
- flex-wrap: nowrap;
+  position: bottom;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  list-style: none;
+  flex-wrap: nowrap;
  }
   
  .pagination_button {
@@ -47,3 +52,20 @@
   color: #47ccde;
   background-color: azure;
  }
+
+ @media (min-width: 150px) {
+  .pagination {
+    top: 238vh;
+  }
+}
+
+@media (min-width: 796px) {
+  .pagination {
+    top: 115vh;
+  }
+  @media (min-width: 1203px) {
+    .pagination {
+      top: 55vh;
+    }
+  }
+}

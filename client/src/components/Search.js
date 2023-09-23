@@ -11,18 +11,15 @@ class Search extends Component {
     }
     this.searchValue = _.debounce(this.searchValue, 1000);
   }
-  async componentDidMount() {
-    this.fetchPosts('http://localhost:8080/post/')
-  }
   async fetchSearch(query){
     const res = await fetch(query, {method: 'GET', headers: {'Content-Type':'Authorization'}});
     const json = await res.json();
-    json.success && this.props.searchPosts(json);
+    json.success && this.props.searchPosts(json) && this.props.searchQuery(this.state.query);
     };
   async fetchPosts (query) {
     const res = await fetch(query, {method: 'GET', headers: {'Content-Type':'Authorization'}});
     const json = await res.json();
-    this.props.getPosts(json);
+    json.success && this.props.getPosts(json) && this.props.searchQuery(this.state.query);
   };
   onChange(query) {
     this.setState({ query });
@@ -50,6 +47,9 @@ const mapDispatchToProps = dispatch => ({
   searchPosts: (json) => (
     dispatch({ type: "posts/searchPosts", payload: json })
     
+  ),
+  searchQuery: (json) => (
+    dispatch({ type: "posts/searchQuery", payload: json })
   ),
   getPosts: (json) => (
     dispatch({ type: "posts/getPosts", payload: json })

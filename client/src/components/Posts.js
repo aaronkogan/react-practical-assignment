@@ -3,9 +3,18 @@ import Pagination from "./Pagination";
 import Panel from "./Panel";
 import { useState } from 'react';
 import {  useSelector, useDispatch } from "react-redux";
-import { getPosts , selectPosts, selectPage } from "../reducers/posts";
-import { selectQuery } from "../reducers/post";
+import {  selectPosts, selectPage, getPosts, currentPage } from "../reducers/posts";
+import { selectQuery, resetEvent } from "../reducers/post";
 import Modal from 'react-modal';
+
+const isTouchScreenDevice = () => {
+  try{
+      document.createEvent('TouchEvent');
+      return true;
+  }catch(e){
+      return false;
+  }
+}
 
 const Posts = () => {
   const postsPerPage = 9;
@@ -19,44 +28,86 @@ const Posts = () => {
     Event: "hide",
     payload: {}
   });
-
+  const indexOfLastPost = page * postsPerPage; 
+  const indexOfFirstPost = indexOfLastPost - postsPerPage;
+  const fetchPosts = async (query) => {
+    const res = await fetch(query, {method: 'GET', headers: {'Content-Type':'Authorization'}});
+    const json = await res.json();
+    json.success && dispatch(getPosts(json));
+    };
   const setModalIsOpenToTrue = (itemId, e, p) => {
     setModalEvent({id: itemId, Event: e, payload: p});
   };
   const setModalIsOpenToFalse  =() => {
     setModalEvent({id: 0, Event: "hide", payload: {}});
   };
-  let parsed = JSON.parse(JSON.stringify(posts));
-  let parseResult = [];
+  const parsed = posts?.result.map((obj) => obj)
+  switch (postQuery.event) {
+    case 'deletePost': {
+      for (var i = 0; i < parsed?.length; i++){
+        if (parsed[i].id === postQuery.id){
+          parsed?.splice(i,1);
+          console.warn("DEBUG: "+indexOfLastPost)
+          console.warn("DEBUG: "+indexOfFirstPost)
+          dispatch(resetEvent());
+          dispatch(getPosts({result : parsed}));
+          console.warn("DEBUG: "+indexOfLastPost)
+          console.warn("DEBUG: "+indexOfFirstPost)
+          setModalEvent({Event: "hide"})
+          break;
+        }
+      }
+      break;
+    }
+      case 'newPost': {
+        const request = JSON.parse(JSON.stringify(postQuery));
+        delete request["event"];
+        parsed?.push(request);
+        dispatch(resetEvent());
+        dispatch(currentPage(1));
+        dispatch(getPosts({result : parsed}));
+        break;
+    }
+        case 'firstStart': {
+          dispatch(resetEvent());
+          fetchPosts('http://localhost:8080/post/');
+          break;
+        }  
+        default: break;
+    }
+  const parseResult = [];
   if(parsed) {
-    let result = {};
-    result = (parsed.result) 
-        for(var i = 0; i < result.length; i++) {
-          if (result[i] !== '')  {
-            parseResult.push([result[i].id, result[i].title, result[i].username, result[i].imageSrc, result[i].likes, result[i].dislikes, result[i].date, result[i].comments]);
+        for(var i = 0; i < parsed.length; i++) {
+          if (parsed[i] !== '')  {
+            parseResult.push([parsed[i].id, parsed[i].title, parsed[i].username, parsed[i].imageSrc, parsed[i].likes, parsed[i].dislikes, parsed[i].date, parsed[i].comments]);
            }
           }
         parseResult.reverse();
-
     };    
-  const indexOfLastPost = page * postsPerPage; 
-  const indexOfFirstPost = indexOfLastPost - postsPerPage;
   const currentPosts = parseResult.slice(indexOfFirstPost, indexOfLastPost);
   const paginate = (page) => (page);
     return (
     <div>
       <div className="posts-container">
-      {currentPosts.map((post) => (    
+      {currentPosts.map((post) => (  
+        isTouchScreenDevice() ?   
+            <div className="posts-item" onClick={e => e.currentTarget === e.target && setModalIsOpenToTrue(post[0], "fullscreen", ({ title : post[1], owner: post[2], url : post[3] }))} style={{backgroundImage: `url(${post[3]})`}} key={post[0]}><div>{post[0]}</div>           
+              {<div><div onClick={e => e.currentTarget === e.target && setModalIsOpenToTrue(post[0], "fullscreen", ({ title : post[1], owner: post[2], url : post[3] }))}>{post[1]}<br/>by {post[2]}</div><div style={{paddingLeft : "-25%", justifyContent: "center", position: "center", display: "flex", flexDirection: "row"}}><Panel id={post[0]} title={post[1]} owner={post[2]} url={post[3]}/></div></div>}
+            </div> 
+            :
             <div className="posts-item" onMouseEnter={() => setHoverId(post[0])} onMouseLeave={() => setHoverId(0)} onClick={e => e.currentTarget === e.target && setModalIsOpenToTrue(post[0], "fullscreen", ({ title : post[1], owner: post[2], url : post[3] }))} style={{backgroundImage: `url(${post[3]})`}} key={post[0]}><div>{post[0]}</div>           
-              {(hoverId === post[0]) ? <div><div onClick={e => e.currentTarget === e.target && setModalIsOpenToTrue(post[0], "fullscreen", ({ title : post[1], owner: post[2], url : post[3] }))}>{post[1]}<br/>by {post[2]}</div><div style={{paddingLeft : "-25%", justifyContent: "center", position: "center", display: "flex", flexDirection: "row"}}><Panel id={post[0]} title={post[1]} owner={post[2]} url={post[3]}/></div></div> : <div onClick={e => e.currentTarget === e.target && setModalIsOpenToTrue(post[0], "fullscreen", ({ title : post[1], owner: post[2], url : post[3] }))} style={{color: "Transparent"}}>{post[1]}<br/>by {post[2]} {post[8]}</div>}
-            </div>
+            {(hoverId === post[0]) ? <div><div onClick={e => e.currentTarget === e.target && setModalIsOpenToTrue(post[0], "fullscreen", ({ title : post[1], owner: post[2], url : post[3] }))}>{post[1]}<br/>by {post[2]}</div><div style={{paddingLeft : "-25%", justifyContent: "center", position: "center", display: "flex", flexDirection: "row"}}><Panel id={post[0]} title={post[1]} owner={post[2]} url={post[3]}/></div></div> : <div onClick={e => e.currentTarget === e.target && setModalIsOpenToTrue(post[0], "fullscreen", ({ title : post[1], owner: post[2], url : post[3] }))} style={{color: "Transparent"}}>{post[1]}<br/>by {post[2]} {post[8]}</div>}
+          </div> 
       ))}
+      </div>
+      <div style={{ justifyContent: "center", position: "center", display: "flex", flexDirection: "row"}}>
       <Pagination
         postsPerPage={postsPerPage}
         totalPosts={parseResult.length}
         paginate={paginate}
+        page={page}
       />
-    </div>
+      </div>
       <Modal onRequestClose={setModalIsOpenToFalse} isOpen={modalEvent.Event !== "hide"} className={`main-modal-${modalEvent.Event}`}  appElement={document.getElementById('root') || undefined}>
       {(() => {
           if (modalEvent.Event === "fullscreen") {
@@ -64,7 +115,7 @@ const Posts = () => {
             <div>
               {modalEvent.payload.title} by {modalEvent.payload.owner}
               <img onClick={e => e.currentTarget === e.target && setModalIsOpenToFalse} alt={modalEvent.payload.title} className={`main-modal-${modalEvent.Event}-img`} src={modalEvent.payload.url}></img>
-              <div  style={{paddingLeft : "-25%", justifyContent: "center", position: "center", display: "flex", flexDirection: "row"}}><Panel id={modalEvent.id} title={modalEvent.payload.title} owner={modalEvent.payload.owner} url={modalEvent.payload.url}/></div>
+              <div  style={{ bottom : "-35px", marginLeft : "20%", justifyContent: "center", position: "relative", display: "flex", flexDirection: "column"}}><Panel id={modalEvent.id} title={modalEvent.payload.title} owner={modalEvent.payload.owner} url={modalEvent.payload.url}/></div>
             </div>
           )
         }

@@ -9,7 +9,6 @@ export const postSlice = createSlice({
     reducers: {
         newPost: (state, action) => {
             state.query = action.payload;
-            console.warn("Redux newPost: "+ JSON.stringify(state.query))
         },
         editPost: (state, action) => {
             state.query = action.payload;
@@ -17,15 +16,17 @@ export const postSlice = createSlice({
         },
         deletePost: (state, action) => {
             state.query = action.payload;
-            console.warn("Redux deletePost: "+ JSON.stringify(state.query))
         },
         preloadPostImg: (state, action) => {
             state.imgPre = action.payload;
+        },
+        resetEvent: (state, action) => {
+            state.query = {id: 0, event: "default"};
         }
     },
 });
 
-export const { newPost, editPost, deletePost, preloadPostImg } = postSlice.actions;
+export const { newPost, editPost, deletePost, preloadPostImg, resetEvent } = postSlice.actions;
 
 export const selectQuery = (state) => state.post.query;
 
