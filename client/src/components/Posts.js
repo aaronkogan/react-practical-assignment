@@ -1,7 +1,7 @@
 import "./Posts.css";
 import Pagination from "./Pagination";
 import Panel from "./Panel";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {  useSelector, useDispatch } from "react-redux";
 import {  selectPosts, selectPage, getPosts, currentPage } from "../reducers/posts";
 import { selectQuery, resetEvent } from "../reducers/post";
