@@ -9,6 +9,7 @@ const Pagination = ({ postsPerPage, totalPosts, paginate, page }) => {
   for(let i = 1; i <= Math.ceil(totalPosts / postsPerPage); i++) {
     pageNumbers.push(i)
   } 
+  (pageNumbers.length+1 <= page && pageNumbers.length !== 1) && dispatch(currentPage(page-1))
   if (pageNumbers.length !== 1) {
   return (
     <div className = "pagination">

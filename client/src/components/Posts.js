@@ -96,17 +96,16 @@ const Posts = () => {
             </div> 
             :
             <div className="posts-item" onMouseEnter={() => setHoverId(post[0])} onMouseLeave={() => setHoverId(0)} onClick={e => e.currentTarget === e.target && setModalIsOpenToTrue(post[0], "fullscreen", ({ title : post[1], owner: post[2], url : post[3] }))} style={{backgroundImage: `url(${post[3]})`}} key={post[0]}><div>{post[0]}</div>           
-            {(hoverId === post[0]) ? <div><div onClick={e => e.currentTarget === e.target && setModalIsOpenToTrue(post[0], "fullscreen", ({ title : post[1], owner: post[2], url : post[3] }))}>{post[1]}<br/>by {post[2]}</div><div style={{paddingLeft : "-25%", justifyContent: "center", position: "center", display: "flex", flexDirection: "row"}}><Panel id={post[0]} title={post[1]} owner={post[2]} url={post[3]}/></div></div> : <div onClick={e => e.currentTarget === e.target && setModalIsOpenToTrue(post[0], "fullscreen", ({ title : post[1], owner: post[2], url : post[3] }))} style={{color: "Transparent"}}>{post[1]}<br/>by {post[2]} {post[8]}</div>}
+            {(hoverId === post[0]) ? 
+            <div><div onClick={e => e.currentTarget === e.target && setModalIsOpenToTrue(post[0], "fullscreen", ({ title : post[1], owner: post[2], url : post[3] }))}>{post[1]}<br/>by {post[2]}</div><div style={{paddingLeft : "-25%", justifyContent: "center", position: "center", display: "flex", flexDirection: "row"}}><Panel id={post[0]} title={post[1]} owner={post[2]} url={post[3]}/></div></div> 
+            : 
+            <div onClick={e => e.currentTarget === e.target && setModalIsOpenToTrue(post[0], "fullscreen", ({ title : post[1], owner: post[2], url : post[3] }))} style={{color: "Transparent"}}>{post[1]}<br/>by {post[2]} {post[8]}</div>
+            }
           </div> 
       ))}
       </div>
       <div style={{ justifyContent: "center", position: "center", display: "flex", flexDirection: "row"}}>
-      <Pagination
-        postsPerPage={postsPerPage}
-        totalPosts={parseResult.length}
-        paginate={paginate}
-        page={page}
-      />
+      <Pagination postsPerPage={postsPerPage} totalPosts={parseResult.length} paginate={paginate} page={page}/>
       </div>
       <Modal onRequestClose={setModalIsOpenToFalse} isOpen={modalEvent.Event !== "hide"} className={`main-modal-${modalEvent.Event}`}  appElement={document.getElementById('root') || undefined}>
       {(() => {
