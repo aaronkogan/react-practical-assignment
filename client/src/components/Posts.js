@@ -1,9 +1,9 @@
 import "./Posts.css";
 import Pagination from "./Pagination";
 import Panel from "./Panel";
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import {  useSelector, useDispatch } from "react-redux";
-import {  selectPosts, selectPage, getPosts, currentPage } from "../reducers/posts";
+import {  selectPosts, selectPage, getPosts, selectSearchQuery, searchQuery, currentPage } from "../reducers/posts";
 import { selectQuery, resetEvent } from "../reducers/post";
 import Modal from 'react-modal';
 
@@ -22,6 +22,7 @@ const Posts = () => {
   const posts = useSelector(selectPosts);
   const page = useSelector(selectPage);
   const postQuery = useSelector(selectQuery);
+  const search = useSelector(selectSearchQuery);
   const [hoverId, setHoverId] = useState(0);
   const [modalEvent, setModalEvent] = useState({
     id: 0,
@@ -44,35 +45,39 @@ const Posts = () => {
   const parsed = posts?.result.map((obj) => obj)
   switch (postQuery.event) {
     case 'deletePost': {
-      for (var i = 0; i < parsed?.length; i++){
-        if (parsed[i].id === postQuery.id){
-          parsed?.splice(i,1);
-          console.warn("DEBUG: "+indexOfLastPost)
-          console.warn("DEBUG: "+indexOfFirstPost)
+      for (var j = 0; j < parsed?.length; j++){
+        if (parsed[j].id === postQuery.id){
+          parsed?.splice(j,1);
           dispatch(resetEvent());
           dispatch(getPosts({result : parsed}));
-          console.warn("DEBUG: "+indexOfLastPost)
-          console.warn("DEBUG: "+indexOfFirstPost)
           setModalEvent({Event: "hide"})
           break;
         }
       }
       break;
-    }
+      }
       case 'newPost': {
         const request = JSON.parse(JSON.stringify(postQuery));
         delete request["event"];
         parsed?.push(request);
+        if(search === '') {
         dispatch(resetEvent());
         dispatch(currentPage(1));
         dispatch(getPosts({result : parsed}));
+        } else {
+          dispatch(searchQuery(""));
+          document.getElementById('search').value="";
+          dispatch(resetEvent());
+          dispatch(currentPage(1));
+          fetchPosts('http://localhost:8080/post/');
+        }
         break;
-    }
+      }
         case 'firstStart': {
           dispatch(resetEvent());
           fetchPosts('http://localhost:8080/post/');
           break;
-        }  
+       }  
         default: break;
     }
   const parseResult = [];

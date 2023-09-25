@@ -43,6 +43,7 @@ class Search extends Component {
     )
   }
 }
+
 const mapDispatchToProps = dispatch => ({
   searchPosts: (json) => (
     dispatch({ type: "posts/searchPosts", payload: json })

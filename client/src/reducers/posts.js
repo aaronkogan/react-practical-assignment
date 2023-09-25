@@ -31,6 +31,6 @@ export const selectPosts = (state) => state.posts.posts;
 
 export const selectPage = (state) => state.posts.pageNumber;
 
-export const selectQuery = (state) => state.posts.query;
+export const selectSearchQuery = (state) => state.posts.query;
 
 export default postsSlice.reducer;
