@@ -1,11 +1,13 @@
 import { createSlice  } from "@reduxjs/toolkit";
 
+const initialState = {
+    query: {id: 0, event: "firstStart"},
+    imgPre: 0
+}
+
 export const postSlice = createSlice({
     name: "post",
-    initialState: {
-        query: {id: 0, event: "firstStart"},
-        imgPre: 0
-    },
+    initialState,
     reducers: {
         newPost: (state, action) => {
             state.query = action.payload;
@@ -22,11 +24,14 @@ export const postSlice = createSlice({
         },
         resetEvent: (state, action) => {
             state.query = {id: 0, event: "default"};
+        },
+        resetPost: (state, action) => {
+            Object.assign(state, initialState);
         }
     },
 });
 
-export const { newPost, editPost, deletePost, preloadPostImg, resetEvent } = postSlice.actions;
+export const { newPost, editPost, deletePost, preloadPostImg, resetEvent, resetPost } = postSlice.actions;
 
 export const selectQuery = (state) => state.post.query;
 

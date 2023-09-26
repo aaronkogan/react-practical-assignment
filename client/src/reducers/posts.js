@@ -1,12 +1,14 @@
 import { createSlice  } from "@reduxjs/toolkit";
 
+const initialState = {
+    posts: null,
+    pageNumber: 1,
+    query: ""
+}
+
 export const postsSlice = createSlice({
     name: "posts",
-    initialState: {
-        posts: null,
-        pageNumber: 1,
-        query: ""
-    },
+    initialState,
     reducers: {
         searchPosts: (state, action) => {
             state.pageNumber = 1;
@@ -21,11 +23,14 @@ export const postsSlice = createSlice({
         },
         currentPage: (state, action) => {
             state.pageNumber = action.payload;
+        },
+        resetPosts: (state, action) => {
+            Object.assign(state, initialState);
         }
     },
 });
 
-export const { searchPosts, getPosts, currentPage, searchQuery } = postsSlice.actions;
+export const { searchPosts, getPosts, currentPage, searchQuery, resetPosts } = postsSlice.actions;
 
 export const selectPosts = (state) => state.posts.posts;
 

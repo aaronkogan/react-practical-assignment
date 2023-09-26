@@ -1,13 +1,16 @@
 import "./Panel.css";
+import  RedactPost  from './EditPost'
 import { selectUser } from '../reducers/user';
 import { deletePost } from "../reducers/post";
+import { selectQuery } from "../reducers/post";
 import { useDispatch, useSelector } from "react-redux";
-import { useState } from 'react';
+import { useState, useEffect  } from 'react';
 import Modal from 'react-modal';
 
 const Panel = (props) => {
     const dispatch = useDispatch();
     const user = useSelector(selectUser);
+    const postQuery = useSelector(selectQuery);
     const [Event, setEvent] = useState("hide");
     const isOwner = (user.name === props.owner);
     const openInNewTab = url => { window.open(url, '_blank', 'noopener,noreferrer') };
@@ -29,7 +32,9 @@ const Panel = (props) => {
               <div className={`panelModal-${Event}`}><div>You want to delete post {props.title}?</div><br/><div><button onClick={e => e.currentTarget === e.target && delPost(props.id)} className="delete-button">Delete</button><button onClick={e => e.currentTarget === e.target && setEvent("hide")} className="cancel_button">Cancel</button></div></div>
             )
           } else if (Event === "editPost")  {
-            <div className="panelModal"><button onClick={e => e.currentTarget === e.target && setEvent("hide")} className="cancel_button">Cancel</button></div>
+            return( 
+              <div className={`panelModal-${Event}`}><RedactPost id={props.id} title={props.title} url={props.url}/></div>
+            )
           }
         })()}
         </ Modal>

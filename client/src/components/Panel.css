@@ -40,6 +40,31 @@
     justify-content: center; 
 }
 
+.panelModal-editPost {
+    display: flex;
+    flex-direction: column;
+    border-radius: 12px;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Inter';
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color       : #b6bba0a2;    
+}
+
+.panelModal-deletePost {
+    background-color       : #c3b398a2;  
+  }
+
+.panelModal-deletePost>div {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center; 
+}
+
 .delete-button {
 margin-left: 10px; 
 margin-top: 10px; 

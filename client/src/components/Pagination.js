@@ -12,7 +12,7 @@ const Pagination = ({ postsPerPage, totalPosts, paginate, page }) => {
   pageNumbers.length < page && pageNumbers.length !== 1 && pageNumbers.length !== 0 && dispatch(currentPage(page-1))
   if (pageNumbers.length !== 1) {
   return (
-    <div className = "pagination">
+    <div key="paginate" className = "pagination">
     <ul>
     {pageNumbers.map(number => (
       <li key = {number}>
@@ -22,7 +22,7 @@ const Pagination = ({ postsPerPage, totalPosts, paginate, page }) => {
     </ul>
     </div>
   )
-    } else { return (<div></div>) }
+    } else { return (<div key="paginate"></div>) }
 }
 
 export default Pagination

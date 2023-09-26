@@ -1,63 +1,51 @@
-import "./NewPost.css";
+import "./EditPost.css";
 import Upload from "./Upload";
-import React, { useState } from 'react';
-import Modal from 'react-modal';
+import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from "react-redux";
-import { getPosts, preloadPostImg, selectNewPostImg } from "../reducers/posts";
+import { editPost, preloadPostImg, selectNewPostImg } from  "../reducers/post";
 import { selectUser } from '../reducers/user';
-
-const EditPost = () => {
+const RedactPost = (props) => {
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
   const imgPreload = useSelector(selectNewPostImg);
-  const [title, setTitle] = useState("");
-  const [modalIsOpen,setModalIsOpen] = useState(false);
-  const setModalIsOpenToTrue =()=>{
-      setModalIsOpen(true)
-  }
-  const setModalIsOpenToFalse =()=>{
-      setModalIsOpen(false);
-      setTitle("");
-      dispatch(preloadPostImg(0));
-  }
-  const postImg = async (url, query, cb) => {
-    const formData = new FormData();
-    formData.append("picture", query);
-    const res = await fetch(url, {method: 'POST', headers: {'Accept': '/'}, body: formData});
-    const json = await res.json();
-    json.success && fetchPosts('http://localhost:8080/post/');
-  };
-  const postInit = async (query, cb) => {
-    const res = await fetch('http://localhost:8080/post/', {method: 'POST', headers: {'Content-Type':'application/json'}, body: query});
-    const json = await res.json();
-    json.success && postImg('http://localhost:8080/post/'+JSON.stringify(json.result.id)+'/picture', document.getElementById('input-file-upload').files[0]);
-  };
-  const fetchPosts = async (query) => {
-    const res = await fetch(query, {method: 'GET', headers: {'Content-Type':'Authorization'}});
-    const json = await res.json();
-    dispatch(getPosts(json));
-    setModalIsOpenToFalse();
+  const [title, setTitle] = useState(props.title);
+  const [enabled, setEnable] = useState(false);
+    useEffect(() => {
+      if(document.getElementById('label-file-upload')?.style?.backgroundImage?.length !== 0){
+        if(imgPreload!== 0) {
+          (title!== '') ? setEnable(true) : setEnable(false);
+        } else { (title !== '' && title!== props.title) ? setEnable(true) : setEnable(false); } 
+     } else setEnable(false);  },[title, props.title, imgPreload]);
+    const postEdit = async (query,id) => {
+      const res = await fetch(`http://localhost:8080/post/${id}`, {method: 'PUT', headers: {'Content-Type':'application/json'}, body: query});
+      const json = await res.json();
+      json.success && (imgPreload !== 0) ? postImg('http://localhost:8080/post/'+JSON.stringify(json.result.id)+'/picture', document.getElementById('input-file-upload').files[0]) : json.result = { ...json.result, event: 'editPost'};
+      dispatch(editPost(json.result));
     };
-  const handleNewPost = (e) => {
+    const postImg = async (url, query) => {
+      const formData = new FormData();
+      formData.append("picture", query);
+      const res = await fetch(url, {method: 'POST', headers: {'Accept': '/'}, body: formData});
+      const json = await res.json();
+      if(json.success) {
+        json.result = { ...json.result, event: 'editPost'};
+        dispatch(editPost(json.result));
+      } 
+    };
+  const handleEditPost = (e) => {
       e.preventDefault();
-      postInit(JSON.stringify({title: title, username: user.name}));
+      postEdit(JSON.stringify({title: title}), props.id);
     };
-  const enabled = (title.length > 0 && imgPreload);
-  return (
-    <React.Fragment>
-      <div className="NewPost">
-          <button onClick={setModalIsOpenToTrue}>Edit post</button>
-          <Modal onRequestClose={setModalIsOpenToFalse} isOpen={modalIsOpen} className="newPostModal" appElement={document.getElementById('root') || undefined}>
-              <input className="input_title" placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)}></input>
-              <Upload />
-      <div className="NewPost">
-          <button disabled={!enabled} onClick={(e) => handleNewPost(e)}>Add post</button>
-          <button className="cancel_button" onClick={setModalIsOpenToFalse}>Cancel</button>
-      </div>
-          </Modal>
-      </div>
-    </React.Fragment>
+   return (
+    <div  className="EditPost">
+      <input autoFocus name="input_title" placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)}></input>
+      <Upload preload={true} url={props.url}/>
+    <div className="EditPost">
+      <button disabled={!enabled} onClick={(e) => handleEditPost(e)}>Edit post</button>
+      <button className="cancel_button" onClick={() => { console.warn("DEBUG: "+ document.getElementById('label-file-upload')?.style?.backgroundImage?.length) }}>Cancel</button>
+    </div>
+    </div>
     );
 };
 
-export default EditPost;
+export default RedactPost;

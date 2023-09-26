@@ -1,7 +1,7 @@
 import "./Posts.css";
 import Pagination from "./Pagination";
 import Panel from "./Panel";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {  useSelector, useDispatch } from "react-redux";
 import {  selectPosts, selectPage, getPosts, selectSearchQuery, searchQuery, currentPage } from "../reducers/posts";
 import { selectQuery, resetEvent } from "../reducers/post";
@@ -31,31 +31,26 @@ const Posts = () => {
   });
   const indexOfLastPost = page * postsPerPage; 
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
-  const fetchPosts = async (query) => {
-    const res = await fetch(query, {method: 'GET', headers: {'Content-Type':'Authorization'}});
-    const json = await res.json();
-    json.success && dispatch(getPosts(json));
-    };
   const setModalIsOpenToTrue = (itemId, e, p) => {
     setModalEvent({id: itemId, Event: e, payload: p});
   };
   const setModalIsOpenToFalse  =() => {
     setModalEvent({id: 0, Event: "hide", payload: {}});
   };
-  const parsed = posts?.result.map((obj) => obj)
-  switch (postQuery.event) {
-    case 'deletePost': {
-      for (var j = 0; j < parsed?.length; j++){
-        if (parsed[j].id === postQuery.id){
-          parsed?.splice(j,1);
-          dispatch(resetEvent());
-          dispatch(getPosts({result : parsed}));
-          setModalEvent({Event: "hide"})
-          break;
-        }
-      }
-      break;
-      }
+  const parseResult = [];
+  const parsed = posts?.result.map((obj) => obj);
+  useEffect(() => {
+    const fetchPosts = async (query) => {
+      const res = await fetch(query, {method: 'GET', headers: {'Content-Type':'Authorization'}});
+      const json = await res.json();
+      json.success && dispatch(getPosts(json));
+      };
+    switch (postQuery.event) {
+      case 'firstStart': {
+        dispatch(resetEvent());
+        fetchPosts('http://localhost:8080/post/');
+        break;
+      } 
       case 'newPost': {
         const request = JSON.parse(JSON.stringify(postQuery));
         delete request["event"];
@@ -73,14 +68,25 @@ const Posts = () => {
         }
         break;
       }
-        case 'firstStart': {
-          dispatch(resetEvent());
-          fetchPosts('http://localhost:8080/post/');
-          break;
-       }  
+      case 'editPost': {
+        console.warn("Posts edit post!");
+        break;
+      }
+      case 'deletePost': {
+        for (var j = 0; j < parsed?.length; j++){
+          if (parsed[j].id === postQuery.id){
+            parsed?.splice(j,1);
+            dispatch(resetEvent());
+            dispatch(getPosts({result : parsed}));
+            setModalEvent({Event: "hide"})
+            break;
+          }
+        }
+        break;
+        } 
         default: break;
     }
-  const parseResult = [];
+     },[postQuery, dispatch, parsed, search]);
   if(parsed) {
         for(var i = 0; i < parsed.length; i++) {
           if (parsed[i] !== '')  {
@@ -100,7 +106,7 @@ const Posts = () => {
               {<div><div onClick={e => e.currentTarget === e.target && setModalIsOpenToTrue(post[0], "fullscreen", ({ title : post[1], owner: post[2], url : post[3] }))}>{post[1]}<br/>by {post[2]}</div><div style={{paddingLeft : "-25%", justifyContent: "center", position: "center", display: "flex", flexDirection: "row"}}><Panel id={post[0]} title={post[1]} owner={post[2]} url={post[3]}/></div></div>}
             </div> 
             :
-            <div className="posts-item" onMouseEnter={() => setHoverId(post[0])} onMouseLeave={() => setHoverId(0)} onClick={e => e.currentTarget === e.target && setModalIsOpenToTrue(post[0], "fullscreen", ({ title : post[1], owner: post[2], url : post[3] }))} style={{backgroundImage: `url(${post[3]})`}} key={post[0]}><div>{post[0]}</div>           
+            <div className="posts-item" onMouseEnter={() => setHoverId(post[0])}  onClick={e => e.currentTarget === e.target && setModalIsOpenToTrue(post[0], "fullscreen", ({ title : post[1], owner: post[2], url : post[3] }))} style={{backgroundImage: `url(${post[3]})`}} key={post[0]}><div>{post[0]}</div>           
             {(hoverId === post[0]) ? 
             <div><div onClick={e => e.currentTarget === e.target && setModalIsOpenToTrue(post[0], "fullscreen", ({ title : post[1], owner: post[2], url : post[3] }))}>{post[1]}<br/>by {post[2]}</div><div style={{paddingLeft : "-25%", justifyContent: "center", position: "center", display: "flex", flexDirection: "row"}}><Panel id={post[0]} title={post[1]} owner={post[2]} url={post[3]}/></div></div> 
             : 

@@ -46,8 +46,8 @@ const AddPost = () => {
       <div className="NewPost">
           <button onClick={setModalIsOpenToTrue}>New post</button>
           <Modal onRequestClose={setModalIsOpenToFalse} isOpen={modalIsOpen} className="newPostModal" appElement={document.getElementById('root') || undefined}>
-              <input autoFocus className="input_title" placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)}></input>
-              <Upload />
+              <input autoFocus name="input_title" placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)}></input>
+              <Upload preload={false}/>
       <div className="NewPost">
           <button disabled={!enabled} onClick={(e) => handleNewPost(e)}>Add post</button>
           <button className="cancel_button" onClick={setModalIsOpenToFalse}>Cancel</button>
