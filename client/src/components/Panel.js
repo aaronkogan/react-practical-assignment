@@ -14,6 +14,7 @@ const Panel = (props) => {
     const [Event, setEvent] = useState("hide");
     const isOwner = (user.name === props.owner);
     const openInNewTab = url => { window.open(url, '_blank', 'noopener,noreferrer') };
+    (postQuery.event === 'editPostPanel') && console.warn("Pabel!!! posts edit post!");
     const delPost = async (query) => {
       const res = await fetch(`http://localhost:8080/post/${query}`, {method: 'DELETE', headers: {'Content-Type':'Authorization'}});
       const json = await res.json();
