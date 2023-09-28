@@ -69,9 +69,16 @@ const Posts = () => {
         break;
       }
       case 'editPost': {
-        console.warn("Posts edit post! TODO!");
-        setModalEvent({Event: "hide"});
-        dispatch(resetEvent());
+        for (var j = 0; j < parsed?.length; j++){
+          if (parsed[j].id === postQuery.id){
+            console.warn("!!!!:"+JSON.stringify(postQuery));
+            parsed[j] = postQuery;
+            dispatch(resetEvent());
+            dispatch(getPosts({result : parsed}));
+            setModalEvent({Event: "hide"});
+            break;
+          }
+        }
         break;
       }
       case 'deletePost': {
@@ -90,12 +97,12 @@ const Posts = () => {
     }
      },[postQuery, dispatch, parsed, search]);
   if(parsed) {
-        for(var i = 0; i < parsed.length; i++) {
-          if (parsed[i] !== '')  {
-            parseResult.push([parsed[i].id, parsed[i].title, parsed[i].username, parsed[i].imageSrc, parsed[i].likes, parsed[i].dislikes, parsed[i].date, parsed[i].comments]);
-           }
-          }
-        parseResult.reverse();
+    for(var i = 0; i < parsed.length; i++) {
+      if (parsed[i] !== '')  {
+        parseResult.push([parsed[i].id, parsed[i].title, parsed[i].username, parsed[i].imageSrc, parsed[i].likes, parsed[i].dislikes, parsed[i].date, parsed[i].comments]);
+        }
+      }
+    parseResult.reverse();
     };    
   const currentPosts = parseResult.slice(indexOfFirstPost, indexOfLastPost);
   const paginate = (page) => (page);
