@@ -14,7 +14,6 @@ export const postSlice = createSlice({
         },
         editPost: (state, action) => {
             state.query = action.payload;
-            console.warn("Redux editPost: "+ JSON.stringify(state.query))
         },
         deletePost: (state, action) => {
             state.query = action.payload;

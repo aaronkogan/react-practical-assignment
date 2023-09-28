@@ -69,10 +69,11 @@ const Posts = () => {
         break;
       }
       case 'editPost': {
+        const request = JSON.parse(JSON.stringify(postQuery));
+        delete request["event"];
         for (var j = 0; j < parsed?.length; j++){
           if (parsed[j].id === postQuery.id){
-            console.warn("!!!!:"+JSON.stringify(postQuery));
-            parsed[j] = postQuery;
+            parsed[j] = request;
             dispatch(resetEvent());
             dispatch(getPosts({result : parsed}));
             setModalEvent({Event: "hide"});
