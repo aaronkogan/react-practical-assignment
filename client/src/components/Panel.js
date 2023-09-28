@@ -1,8 +1,7 @@
 import "./Panel.css";
 import  RedactPost  from './EditPost'
 import { selectUser } from '../reducers/user';
-import { deletePost } from "../reducers/post";
-import { selectQuery } from "../reducers/post";
+import { deletePost, selectQuery, eventQuery } from "../reducers/post";
 import { useDispatch, useSelector } from "react-redux";
 import { useState, useEffect  } from 'react';
 import Modal from 'react-modal';
@@ -14,7 +13,10 @@ const Panel = (props) => {
     const [Event, setEvent] = useState("hide");
     const isOwner = (user.name === props.owner);
     const openInNewTab = url => { window.open(url, '_blank', 'noopener,noreferrer') };
-    (postQuery.event === 'editPostPanel') && console.warn("Pabel!!! posts edit post!");
+    if (postQuery.event === 'editPostPanel') {
+      dispatch(eventQuery({id: props.id, event: 'editPost'}));
+      setEvent("hide");
+    };
     const delPost = async (query) => {
       const res = await fetch(`http://localhost:8080/post/${query}`, {method: 'DELETE', headers: {'Content-Type':'Authorization'}});
       const json = await res.json();

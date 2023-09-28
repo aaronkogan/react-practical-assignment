@@ -27,11 +27,14 @@ export const postSlice = createSlice({
         },
         resetPost: (state, action) => {
             Object.assign(state, initialState);
-        }
+        },
+        eventQuery: (state, action) => {
+            state.query = action.payload;
+        } 
     },
 });
 
-export const { newPost, editPost, deletePost, preloadPostImg, resetEvent, resetPost } = postSlice.actions;
+export const { newPost, editPost, deletePost, preloadPostImg, resetEvent, resetPost, eventQuery } = postSlice.actions;
 
 export const selectQuery = (state) => state.post.query;
 

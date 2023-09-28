@@ -69,7 +69,9 @@ const Posts = () => {
         break;
       }
       case 'editPost': {
-        console.warn("Posts edit post!");
+        console.warn("Posts edit post! TODO!");
+        setModalEvent({Event: "hide"});
+        dispatch(resetEvent());
         break;
       }
       case 'deletePost': {
@@ -78,7 +80,7 @@ const Posts = () => {
             parsed?.splice(j,1);
             dispatch(resetEvent());
             dispatch(getPosts({result : parsed}));
-            setModalEvent({Event: "hide"})
+            setModalEvent({Event: "hide"});
             break;
           }
         }
