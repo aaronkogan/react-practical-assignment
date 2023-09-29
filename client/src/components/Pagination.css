@@ -1,10 +1,9 @@
 .pagination {
-  position: relative;
-  width: 80vw;
-  margin-top: 4px;
-  justify-content: center;
+  max-width: 80vw;
+  display: flex;
+  flex-direction: row;
   align-items: center;
-  bottom: 0px;
+  justify-content: right;
  }
   
  .pagination>.active>button {
@@ -54,17 +53,17 @@
  }
 
  @media (min-width: 150px) {
-  .pagination {
-    top: 238vh;
+  .pagination1 {
+    top: 242vh;
   }
 }
 
 @media (min-width: 796px) {
-  .pagination {
+  .pagination1 {
     top: 115vh;
   }
   @media (min-width: 1203px) {
-    .pagination {
+    .pagination1 {
       top: 55vh;
     }
   }

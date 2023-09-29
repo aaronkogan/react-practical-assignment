@@ -124,10 +124,10 @@ const Posts = () => {
             }
           </div> 
       ))}
+      <div className="posts-item" style={{ boxShadow: "none", border: "none" }}>
+        <footer style={{ justifyContent: "center", display: "flex", flexDirection: "row" }}><Pagination postsPerPage={postsPerPage} totalPosts={parseResult.length} paginate={paginate} page={page}/></footer>
       </div>
-      <div style={{ justifyContent: "center", position: "center", display: "flex", flexDirection: "row"}}>
-      <Pagination postsPerPage={postsPerPage} totalPosts={parseResult.length} paginate={paginate} page={page}/>
-      </div>
+    </div>
       <Modal onRequestClose={setModalIsOpenToFalse} isOpen={modalEvent.Event !== "hide"} className={`main-modal-${modalEvent.Event}`}  appElement={document.getElementById('root') || undefined}>
       {(() => {
           if (modalEvent.Event === "fullscreen") {
