@@ -3,7 +3,7 @@ import Pagination from "./Pagination";
 import Panel from "./Panel";
 import { useState, useEffect } from 'react';
 import {  useSelector, useDispatch } from "react-redux";
-import {  selectPosts, selectPage, getPosts, selectSearchQuery, searchQuery, currentPage } from "../reducers/posts";
+import {  selectPosts, getPosts, selectSearchQuery, searchQuery, currentPage } from "../reducers/posts";
 import { selectQuery, resetEvent } from "../reducers/post";
 import Modal from 'react-modal';
 
@@ -17,20 +17,17 @@ const isTouchScreenDevice = () => {
 }
 
 const Posts = () => {
-  const postsPerPage = 9;
   const dispatch = useDispatch();
   const posts = useSelector(selectPosts);
-  const page = useSelector(selectPage);
   const postQuery = useSelector(selectQuery);
   const search = useSelector(selectSearchQuery);
+  const [pagesCount, setPagesCount] = useState(1);
   const [hoverId, setHoverId] = useState(0);
   const [modalEvent, setModalEvent] = useState({
     id: 0,
     Event: "hide",
     payload: {}
   });
-  const indexOfLastPost = page * postsPerPage; 
-  const indexOfFirstPost = indexOfLastPost - postsPerPage;
   const setModalIsOpenToTrue = (itemId, e, p) => {
     setModalEvent({id: itemId, Event: e, payload: p});
   };
@@ -38,37 +35,52 @@ const Posts = () => {
     setModalEvent({id: 0, Event: "hide", payload: {}});
   };
   const parseResult = [];
-  const parsed = posts?.result.map((obj) => obj);
+  const parsed = posts?.result?.map((obj) => obj);
   useEffect(() => {
+    const lastPageFetch = async (query) => {
+      const res = await fetch(query, {method: 'GET', headers: {'Content-Type':'Authorization'}});
+      const json = await res.json();
+      json.success && setPagesCount(json.totalPages);
+      (json.totalPages !== 0) ? ((json.totalPages !== 1) ? fetchPosts(`http://localhost:8080/post/page/${json.totalPages}`) : dispatch(currentPage(json.page)) && dispatch(getPosts(json))) : (dispatch(currentPage(1)));
+      };
     const fetchPosts = async (query) => {
       const res = await fetch(query, {method: 'GET', headers: {'Content-Type':'Authorization'}});
       const json = await res.json();
-      json.success && dispatch(getPosts(json));
+      json.success && dispatch(currentPage(json.page)) && dispatch(getPosts(json));
+      console.warn("DEBUG fetchPosts: "+ JSON.stringify(json));
       };
     switch (postQuery.event) {
       case 'firstStart': {
         dispatch(resetEvent());
-        fetchPosts('http://localhost:8080/post/');
+        lastPageFetch('http://localhost:8080/post/page/1');
         break;
       } 
       case 'newPost': {
+        console.warn("DEBUG posts newPost event: "+ JSON.stringify(postQuery));
         const request = JSON.parse(JSON.stringify(postQuery));
         delete request["event"];
+        if(parsed?.length < 9) {
         parsed?.push(request);
         if(search === '') {
         dispatch(resetEvent());
-        dispatch(currentPage(1));
+        dispatch(currentPage(pagesCount));
         dispatch(getPosts({result : parsed}));
         } else {
           dispatch(searchQuery(""));
           document.getElementById('search').value="";
           dispatch(resetEvent());
-          dispatch(currentPage(1));
-          fetchPosts('http://localhost:8080/post/');
+          lastPageFetch(`http://localhost:8080/post/page/1`);
         }
+          } else {
+            dispatch(searchQuery(""));
+            document.getElementById('search').value="";
+            dispatch(resetEvent());
+            lastPageFetch(`http://localhost:8080/post/page/1`); 
+          }
         break;
       }
       case 'editPost': {
+        console.warn("DEBUG posts editPost event: "+ JSON.stringify(postQuery));
         const request = JSON.parse(JSON.stringify(postQuery));
         delete request["event"];
         for (var j = 0; j < parsed?.length; j++){
@@ -83,6 +95,7 @@ const Posts = () => {
         break;
       }
       case 'deletePost': {
+        console.warn("DEBUG posts deletePost event: "+ JSON.stringify(postQuery));
         for (var j = 0; j < parsed?.length; j++){
           if (parsed[j].id === postQuery.id){
             parsed?.splice(j,1);
@@ -94,9 +107,12 @@ const Posts = () => {
         }
         break;
         } 
-        default: break;
+        default: {
+          console.warn("DEBUG posts unregistered event: "+ JSON.stringify(postQuery));
+          break;
+        }
     }
-     },[postQuery, dispatch, parsed, search]);
+     },[postQuery, dispatch, parsed, search, pagesCount]);
   if(parsed) {
     for(var i = 0; i < parsed.length; i++) {
       if (parsed[i] !== '')  {
@@ -105,12 +121,10 @@ const Posts = () => {
       }
     parseResult.reverse();
     };    
-  const currentPosts = parseResult.slice(indexOfFirstPost, indexOfLastPost);
-  const paginate = (page) => (page);
     return (
     <div>
       <div className="posts-container">
-      {currentPosts.map((post) => (  
+      {parseResult.map((post) => (  
         isTouchScreenDevice() ?   
             <div className="posts-item" onClick={e => e.currentTarget === e.target && setModalIsOpenToTrue(post[0], "fullscreen", ({ title : post[1], owner: post[2], url : post[3] }))} style={{backgroundImage: `url(${post[3]})`}} key={post[0]}><div>{post[0]}</div>           
               {<div><div onClick={e => e.currentTarget === e.target && setModalIsOpenToTrue(post[0], "fullscreen", ({ title : post[1], owner: post[2], url : post[3] }))}>{post[1]}<br/>by {post[2]}</div><div style={{paddingLeft : "-25%", justifyContent: "center", position: "center", display: "flex", flexDirection: "row"}}><Panel id={post[0]} title={post[1]} owner={post[2]} url={post[3]}/></div></div>}
@@ -124,8 +138,8 @@ const Posts = () => {
             }
           </div> 
       ))}
-      <div className="posts-item" style={{ boxShadow: "none", border: "none" }}>
-        <footer style={{ justifyContent: "center", display: "flex", flexDirection: "row" }}><Pagination postsPerPage={postsPerPage} totalPosts={parseResult.length} paginate={paginate} page={page}/></footer>
+      <div className="posts-item">
+        <footer style={{ justifyContent: "center", display: "flex", flexDirection: "row" }}><Pagination pagesCount={pagesCount}/></footer>
       </div>
     </div>
       <Modal onRequestClose={setModalIsOpenToFalse} isOpen={modalEvent.Event !== "hide"} className={`main-modal-${modalEvent.Event}`}  appElement={document.getElementById('root') || undefined}>

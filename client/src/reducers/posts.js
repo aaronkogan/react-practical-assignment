@@ -11,21 +11,24 @@ export const postsSlice = createSlice({
     initialState,
     reducers: {
         searchPosts: (state, action) => {
+            console.warn("DEBUG REDUX searchPosts: "+JSON.stringify(action.payload));
             state.pageNumber = 1;
             state.posts = action.payload;
         },
         searchQuery: (state, action) => {
-            console.warn("REDUX search: "+ action.payload)
             state.query = action.payload;
         },
         getPosts: (state, action) => {
+            console.warn("DEBUG REDUX getPosts: "+JSON.stringify(action.payload));
             state.posts = action.payload;
         },
         currentPage: (state, action) => {
+            console.warn("DEBUG REDUX currentPage: "+JSON.stringify(action.payload));
             state.pageNumber = action.payload;
         },
         resetPosts: (state, action) => {
             Object.assign(state, initialState);
+            console.warn("DEBUG REDUX resetPosts: ");
         }
     },
 });

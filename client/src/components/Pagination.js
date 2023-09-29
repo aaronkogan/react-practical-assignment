@@ -1,28 +1,35 @@
 import React from 'react'
 import './Pagination.css';
-import { useDispatch } from "react-redux";
-import { currentPage } from "../reducers/posts";
+import { useDispatch, useSelector } from "react-redux";
+import { currentPage, selectPage, selectSearchQuery, getPosts } from "../reducers/posts";
 
-const Pagination = ({ postsPerPage, totalPosts, paginate, page }) => {
+const Pagination = ({ pagesCount }) => {
   const dispatch = useDispatch();
+  const page = useSelector(selectPage);
+  const search = useSelector(selectSearchQuery);
+  const fetchPosts = async (query) => {
+    const res = await fetch(query, {method: 'GET', headers: {'Content-Type':'Authorization'}});
+    const json = await res.json();
+    json.success && dispatch(currentPage(json.page)) && dispatch(getPosts(json));
+    console.warn("DEBUG fetchPosts Paginator: "+ JSON.stringify(json));
+    };
+  if(!search) {
   const pageNumbers = [];
-  for(let i = 1; i <= Math.ceil(totalPosts / postsPerPage); i++) {
+  for(let i = 1; i <= pagesCount; i++) {
     pageNumbers.push(i)
   } 
-  pageNumbers.length < page && pageNumbers.length !== 1 && pageNumbers.length !== 0 && dispatch(currentPage(page-1))
-  if (pageNumbers.length !== 1) {
   return (
     <div key="paginate" className = "pagination">
     <ul>
     {pageNumbers.map(number => (
       <li key = {number}>
-        {(page !== number) ? <button className='pagination_button' onClick = {() => { paginate(number); dispatch(currentPage(number)); }}>{number}</button> : <button className='pagination_button' disabled>{number}</button>}
+        {(page !== number) ? <button className='pagination_button' onClick = {() => { fetchPosts(`http://localhost:8080/post/page/${number}`) }}>{number}</button> : <button className='pagination_button' disabled>{number}</button>}
       </li>
     ))}
     </ul>
     </div>
   )
-    } else { return (<div key="paginate"></div>) }
+    } else return (<div key="paginate" className = "pagination"></div>);
 }
 
 export default Pagination

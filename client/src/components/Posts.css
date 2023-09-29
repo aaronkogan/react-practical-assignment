@@ -25,6 +25,8 @@
 .posts-item:last-of-type {
   grid-column: 1 / -1;
   height: 15%;
+  box-shadow: none;
+  border: none;
 }
 
 .main-modal-fullscreen {
