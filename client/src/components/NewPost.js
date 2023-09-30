@@ -12,12 +12,14 @@ const AddPost = () => {
   const imgPreload = useSelector(selectNewPostImg);
   const [title, setTitle] = useState("");
   const [modalIsOpen,setModalIsOpen] = useState(false);
+  const [pressed, setPressed] = useState(false);
   const setModalIsOpenToTrue =()=>{
       setModalIsOpen(true)
   }
   const setModalIsOpenToFalse =()=>{
       setModalIsOpen(false);
       setTitle("");
+      setPressed(false);
       dispatch(preloadPostImg(0));
   }
   const postInit = async (query) => {
@@ -37,10 +39,11 @@ const AddPost = () => {
     } 
   };
   const handleNewPost = (e) => {
-      e.preventDefault();
-      postInit(JSON.stringify({title: title, username: user.name}));
-    };
-  const enabled = (title.length > 0 && imgPreload);
+    setPressed(true);
+    e.preventDefault();
+    postInit(JSON.stringify({title: title, username: user.name}));
+  };
+  const enabled = (title.length > 0 && imgPreload && !pressed);
   return (
     <React.Fragment>
       <div className="NewPost">

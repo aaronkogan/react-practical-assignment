@@ -3,7 +3,7 @@ import Pagination from "./Pagination";
 import Panel from "./Panel";
 import { useState, useEffect } from 'react';
 import {  useSelector, useDispatch } from "react-redux";
-import {  selectPosts, getPosts, selectSearchQuery, searchQuery, currentPage } from "../reducers/posts";
+import {  selectPosts, getPosts, selectSearchQuery, selectPage, searchQuery, currentPage } from "../reducers/posts";
 import { selectQuery, resetEvent } from "../reducers/post";
 import Modal from 'react-modal';
 
@@ -21,6 +21,7 @@ const Posts = () => {
   const posts = useSelector(selectPosts);
   const postQuery = useSelector(selectQuery);
   const search = useSelector(selectSearchQuery);
+  const page = useSelector(selectPage);
   const [pagesCount, setPagesCount] = useState(1);
   const [hoverId, setHoverId] = useState(0);
   const [modalEvent, setModalEvent] = useState({
@@ -60,17 +61,17 @@ const Posts = () => {
         const request = JSON.parse(JSON.stringify(postQuery));
         delete request["event"];
         if(parsed?.length < 9) {
-        parsed?.push(request);
-        if(search === '') {
-        dispatch(resetEvent());
-        dispatch(currentPage(pagesCount));
-        dispatch(getPosts({result : parsed}));
-        } else {
-          dispatch(searchQuery(""));
-          document.getElementById('search').value="";
-          dispatch(resetEvent());
-          lastPageFetch(`http://localhost:8080/post/page/1`);
-        }
+          parsed?.push(request);
+          if(search === '') {
+            dispatch(resetEvent());
+            dispatch(currentPage(pagesCount));
+            dispatch(getPosts({result : parsed}));
+            } else {
+            dispatch(searchQuery(""));
+            document.getElementById('search').value="";
+            dispatch(resetEvent());
+            lastPageFetch(`http://localhost:8080/post/page/1`);
+            }
           } else {
             dispatch(searchQuery(""));
             document.getElementById('search').value="";
@@ -95,24 +96,31 @@ const Posts = () => {
         break;
       }
       case 'deletePost': {
-        console.warn("DEBUG posts deletePost event: "+ JSON.stringify(postQuery));
-        for (var j = 0; j < parsed?.length; j++){
-          if (parsed[j].id === postQuery.id){
-            parsed?.splice(j,1);
+        if(parsed?.length > 1) {
+          if(search === '') {
             dispatch(resetEvent());
-            dispatch(getPosts({result : parsed}));
-            setModalEvent({Event: "hide"});
-            break;
+            fetchPosts(`http://localhost:8080/post/page/${page}`);
+            } else {
+            dispatch(searchQuery(""));
+            document.getElementById('search').value="";
+            dispatch(resetEvent());
+            lastPageFetch(`http://localhost:8080/post/page/1`); 
           }
+        } else {
+          dispatch(searchQuery(""));
+          document.getElementById('search').value="";
+          dispatch(resetEvent());
+          lastPageFetch(`http://localhost:8080/post/page/1`); 
         }
-        break;
+          setModalEvent({Event: "hide"});
+          break;
         } 
         default: {
           console.warn("DEBUG posts unregistered event: "+ JSON.stringify(postQuery));
           break;
         }
     }
-     },[postQuery, dispatch, parsed, search, pagesCount]);
+     },[postQuery, dispatch, parsed, search, page, pagesCount]);
   if(parsed) {
     for(var i = 0; i < parsed.length; i++) {
       if (parsed[i] !== '')  {

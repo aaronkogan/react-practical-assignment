@@ -19,7 +19,10 @@ const Panel = (props) => {
         json['event'] =  'editPost';
         dispatch(editPost(json));
         setEvent("hide");
-      };
+      } else if (postQuery.event === 'editPostPanelHide') {
+        dispatch(editPost({event : "default"}));        
+        setEvent("hide");
+      }
     },[dispatch, postQuery]);
 
     const delPost = async (query) => {
