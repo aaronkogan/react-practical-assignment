@@ -3,7 +3,7 @@
   justify-content: center;
   margin: auto;
   width: 85%; 
-  height: 85vj;
+  height: 85%;
   display: grid;
   grid-auto-rows: minmax(20%, 300px);
   grid-template-columns: repeat(auto-fill, minmax(30%, 300px)); 
@@ -27,6 +27,15 @@
   height: 15%;
   box-shadow: none;
   border: none;
+}
+
+.posts-panel {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  padding-top: 40px;
+  justify-content: center;
+  align-items: center;
 }
 
 .main-modal-fullscreen {
@@ -53,5 +62,3 @@
   max-width: 80vw;  
   max-height: 80vh; 
 }
-
-

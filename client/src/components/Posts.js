@@ -48,7 +48,7 @@ const Posts = () => {
       const res = await fetch(query, {method: 'GET', headers: {'Content-Type':'Authorization'}});
       const json = await res.json();
       json.success && dispatch(currentPage(json.page)) && dispatch(getPosts(json));
-      console.warn("DEBUG fetchPosts: "+ JSON.stringify(json));
+      console.warn("FetchPosts: "+ JSON.stringify(json));
       };
     switch (postQuery.event) {
       case 'firstStart': {
@@ -57,7 +57,7 @@ const Posts = () => {
         break;
       } 
       case 'newPost': {
-        console.warn("DEBUG posts newPost event: "+ JSON.stringify(postQuery));
+        console.warn("posts newPost event: "+ JSON.stringify(postQuery));
         const request = JSON.parse(JSON.stringify(postQuery));
         delete request["event"];
         if(parsed?.length < 9) {
@@ -81,7 +81,7 @@ const Posts = () => {
         break;
       }
       case 'editPost': {
-        console.warn("DEBUG posts editPost event: "+ JSON.stringify(postQuery));
+        console.warn("Posts editPost event: "+ JSON.stringify(postQuery));
         const request = JSON.parse(JSON.stringify(postQuery));
         delete request["event"];
         for (var j = 0; j < parsed?.length; j++){
@@ -115,8 +115,36 @@ const Posts = () => {
           setModalEvent({Event: "hide"});
           break;
         } 
+        case 'editPostLike': {
+          console.warn("Posts likePost event: "+ JSON.stringify(postQuery));
+          const request = JSON.parse(JSON.stringify(postQuery));
+          delete request["event"];
+          for (var j = 0; j < parsed?.length; j++){
+            if (parsed[j].id === postQuery.id){
+              parsed[j] = request;
+              dispatch(resetEvent());
+              dispatch(getPosts({result : parsed}));
+              break;
+            }
+          }
+          break;
+        }
+        case 'editPostDislike': {
+          console.warn("Posts dislikePost event: "+ JSON.stringify(postQuery));
+          const request = JSON.parse(JSON.stringify(postQuery));
+          delete request["event"];
+          for (var j = 0; j < parsed?.length; j++){
+            if (parsed[j].id === postQuery.id){
+              parsed[j] = request;
+              dispatch(resetEvent());
+              dispatch(getPosts({result : parsed}));
+              break;
+            }
+          }
+          break;
+        }
         default: {
-          console.warn("DEBUG posts unregistered event: "+ JSON.stringify(postQuery));
+          console.warn("Posts unregistered event: "+ JSON.stringify(postQuery));
           break;
         }
     }
@@ -134,15 +162,24 @@ const Posts = () => {
       <div className="posts-container">
       {parseResult.map((post) => (  
         isTouchScreenDevice() ?   
-            <div className="posts-item" onClick={e => e.currentTarget === e.target && setModalIsOpenToTrue(post[0], "fullscreen", ({ title : post[1], owner: post[2], url : post[3] }))} style={{backgroundImage: `url(${post[3]})`}} key={post[0]}><div>{post[0]}</div>           
-              {<div><div onClick={e => e.currentTarget === e.target && setModalIsOpenToTrue(post[0], "fullscreen", ({ title : post[1], owner: post[2], url : post[3] }))}>{post[1]}<br/>by {post[2]}</div><div style={{paddingLeft : "-25%", justifyContent: "center", position: "center", display: "flex", flexDirection: "row"}}><Panel id={post[0]} title={post[1]} owner={post[2]} url={post[3]}/></div></div>}
+            <div className="posts-item" onClick={e => e.currentTarget === e.target && setModalIsOpenToTrue(post[0], "fullscreen", ({ title : post[1], owner: post[2], url : post[3], likes: post[4], dislikes: post[5], date: post[6], comments: post[7] }))} style={{backgroundImage: `url(${post[3]})`}} key={post[0]}><div>{post[0]}</div>           
+              {<div>
+                <div onClick={e => e.currentTarget === e.target && setModalIsOpenToTrue(post[0], "fullscreen", ({ title : post[1], owner: post[2], url : post[3], likes: post[4], dislikes: post[5], date: post[6], comments: post[7] }))}>{post[1]}<br/>by {post[2]}</div>
+                  <div style={{paddingLeft : "-25%", justifyContent: "center", position: "center", display: "flex", flexDirection: "row"}}>
+                    <Panel id={post[0]} title={post[1]} owner={post[2]} url={post[3]} likes={post[4]} dislikes={post[5]} date={post[6]} comments={post[7]}/>
+                  </div>
+              </div>}
             </div> 
             :
-            <div className="posts-item" onMouseEnter={() => setHoverId(post[0])}  onClick={e => e.currentTarget === e.target && setModalIsOpenToTrue(post[0], "fullscreen", ({ title : post[1], owner: post[2], url : post[3] }))} style={{backgroundImage: `url(${post[3]})`}} key={post[0]}><div>{post[0]}</div>           
+            <div className="posts-item" onMouseEnter={() => setHoverId(post[0])}  onClick={e => e.currentTarget === e.target && setModalIsOpenToTrue(post[0], "fullscreen", ({ title : post[1], owner: post[2], url : post[3], likes: post[4], dislikes: post[5], date: post[6], comments: post[7] }))} style={{backgroundImage: `url(${post[3]})`}} key={post[0]}><div>{post[0]}</div>           
             {(hoverId === post[0]) ? 
-            <div><div onClick={e => e.currentTarget === e.target && setModalIsOpenToTrue(post[0], "fullscreen", ({ title : post[1], owner: post[2], url : post[3] }))}>{post[1]}<br/>by {post[2]}</div><div style={{paddingLeft : "-25%", justifyContent: "center", position: "center", display: "flex", flexDirection: "row"}}><Panel id={post[0]} title={post[1]} owner={post[2]} url={post[3]}/></div></div> 
+              <div>
+                <div onClick={e => e.currentTarget === e.target && setModalIsOpenToTrue(post[0], "fullscreen", ({ title : post[1], owner: post[2], url : post[3], likes: post[4], dislikes: post[5], date: post[6], comments: post[7] }))}>{post[1]}<br/>by {post[2]}</div>
+              <div style={{paddingLeft : "-25%", justifyContent: "center", position: "center", display: "flex", flexDirection: "row"}}>
+                <Panel id={post[0]} title={post[1]} owner={post[2]} url={post[3]} likes={post[4]} dislikes={post[5]} date={post[6]} comments={post[7]}/></div>
+              </div> 
             : 
-            <div onClick={e => e.currentTarget === e.target && setModalIsOpenToTrue(post[0], "fullscreen", ({ title : post[1], owner: post[2], url : post[3] }))} style={{color: "Transparent"}}>{post[1]}<br/>by {post[2]} {post[8]}</div>
+              <div onClick={e => e.currentTarget === e.target && setModalIsOpenToTrue(post[0], "fullscreen", ({ title : post[1], owner: post[2], url : post[3] }))} style={{color: "Transparent"}}>{post[1]}<br/>by {post[2]} {post[8]}</div>
             }
           </div> 
       ))}
@@ -157,7 +194,7 @@ const Posts = () => {
             <div>
               {modalEvent.payload.title} by {modalEvent.payload.owner}
               <img onClick={e => e.currentTarget === e.target && setModalIsOpenToFalse} alt={modalEvent.payload.title} className={`main-modal-${modalEvent.Event}-img`} src={modalEvent.payload.url}></img>
-              <div  style={{ bottom : "-35px", marginLeft : "20%", justifyContent: "center", position: "relative", display: "flex", flexDirection: "column"}}><Panel id={modalEvent.id} title={modalEvent.payload.title} owner={modalEvent.payload.owner} url={modalEvent.payload.url}/></div>
+              <div className="posts-panel"><Panel id={modalEvent.id} title={modalEvent.payload.title} owner={modalEvent.payload.owner} url={modalEvent.payload.url} likes={modalEvent.payload.likes} dislikes={modalEvent.payload.dislikes} comments={modalEvent.payload.comments}/></div>
             </div>
           )
         }

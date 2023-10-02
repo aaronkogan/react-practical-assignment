@@ -25,9 +25,20 @@ const Upload = (props) => {
       };    
     return (
         <React.Fragment>
-        <form id="form-file-upload" onSubmit={(e) => e.preventDefault()}>
-        <input ref={inputRef} type="file" id="input-file-upload" accept="image/*" multiple={false} onChange={handleChange} />
-        <label style={(preload) ? { backgroundImage: `url(${props.url})` } : (images[0]) && { backgroundImage: `url(${imagesURLs[0]})` } } id="label-file-upload" htmlFor="input-file-upload" >
+        <form 
+          id="form-file-upload" 
+          onSubmit={(e) => e.preventDefault()}>
+        <input 
+          ref={inputRef} 
+          type="file" 
+          id="input-file-upload" 
+          accept="image/*" 
+          multiple={false} 
+          onChange={handleChange}/>
+        <label 
+          style={(preload) ? { backgroundImage: `url(${props.url})` } : (images[0]) && { backgroundImage: `url(${imagesURLs[0]})` } } 
+          id="label-file-upload" 
+          htmlFor="input-file-upload" >
         { !imagesURLs[0] && !preload && <button className="upload-button" onClick={onButtonUploadClick}>Click to select file</button>
       }
         </label>

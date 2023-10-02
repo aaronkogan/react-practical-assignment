@@ -20,7 +20,10 @@ const RedactPost = (props) => {
     if(title !== props.title) {
       const res = await fetch(`http://localhost:8080/post/${id}`, {method: 'PUT', headers: {'Content-Type':'application/json'}, body: query});
       const json = await res.json();
-      json.success && (imgPreload !== 0) ? postImg('http://localhost:8080/post/'+JSON.stringify(json.result.id)+'/picture', document.getElementById('input-file-upload').files[0]) : ((json.result = { ...json.result, event: 'editPostPanel'}) && dispatch(editPost(json.result)));
+      json.success && (imgPreload !== 0) ? 
+      postImg('http://localhost:8080/post/'+JSON.stringify(json.result.id)+'/picture', document.getElementById('input-file-upload').files[0]) 
+      :
+      ((json.result = { ...json.result, event: 'editPostPanel'}) && dispatch(editPost(json.result)));
     } else {
       postImg('http://localhost:8080/post/'+JSON.stringify(props.id)+'/picture', document.getElementById('input-file-upload').files[0]);
     }
@@ -36,6 +39,7 @@ const RedactPost = (props) => {
     } 
   };
   const handleEditPost = (e) => {
+    setEnable(false);
     setPressed(true);
     e.preventDefault();
     postEdit(JSON.stringify({title: title}), props.id);

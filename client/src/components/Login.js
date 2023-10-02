@@ -7,29 +7,19 @@ import { useCookies } from 'react-cookie';
 const Login = () => {
   const dispatch = useDispatch();
   const [name, setName] = useState("");
-  const [cookies, setCookie] = useCookies(['user']);
+  const [cookies] = useCookies(['user']);
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(
-      login({
-        name: name
-      })
-    );
+    dispatch(login({ name: name }));
   };
-  if(cookies["user"] !== "" && cookies["user"] !== undefined) 
-  {
-    dispatch(
-      login({
-        name: cookies["user"]
-      })
-    );      
-  }
+  (cookies["user"] !== "" && cookies["user"] !== undefined) && dispatch(login({ name: cookies["user"] }));      
   const enabled = name.length > 0;
   return (
       <div className="login">
         <form className="login_form" onSubmit={(e) => handleSubmit(e)}>
           <h1>Gallery WEB Application</h1>
           <input
+            autoFocus
             type="name" 
             placeholder="Enter your name" 
             value={name} 

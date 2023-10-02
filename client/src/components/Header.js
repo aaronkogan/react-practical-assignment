@@ -12,7 +12,7 @@ const user = useSelector(selectUser);
 const [cookies, setCookie] = useCookies(['user']);
 useEffect(() => {
   setCookie('user', user.name, {path: '/'});
-}, []);
+}, [setCookie, user.name]);
 const dispatch = useDispatch();
 const handleLogout = (e) => {
   setCookie('user', '', {path: '/'})

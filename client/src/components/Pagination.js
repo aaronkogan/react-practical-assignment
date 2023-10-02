@@ -23,7 +23,10 @@ const Pagination = ({ pagesCount }) => {
     <ul>
     {pageNumbers.map(number => (
       <li key = {number}>
-        {(page !== number) ? <button className='pagination_button' onClick = {() => { fetchPosts(`http://localhost:8080/post/page/${number}`) }}>{number}</button> : <button className='pagination_button' disabled>{number}</button>}
+        {(page !== number) ? 
+          <button className='pagination_button' onClick = {() => { fetchPosts(`http://localhost:8080/post/page/${number}`) }}>{number}</button> 
+          :
+          <button className='pagination_button' disabled>{number}</button>}
       </li>
     ))}
     </ul>

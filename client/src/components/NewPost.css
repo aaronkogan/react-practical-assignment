@@ -1,5 +1,6 @@
 .NewPost {
     position: relative;
+    max-width: 87vw;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -83,3 +84,60 @@
     border-radius: 1rem;
     font-size: 15px;
 }
+
+
+@media screen and (min-width: 1950px) {
+    .NewPost {
+        max-width: 86vw;
+        }
+  }
+  @media screen and (min-width: 2100px) {
+    .NewPost {
+        max-width: 84vw;
+        }
+  }
+  @media screen and (min-width: 2250px) {
+    .NewPost {
+        max-width: 82vw;
+        }
+  }
+  @media screen and (min-width: 2400px) {
+    .NewPost {
+        max-width: 80vw;
+        }
+  }
+  @media screen and (min-width: 2550px) {
+    .NewPost {
+        max-width: 78vw;
+        }
+  }
+  @media screen and (min-width: 2700px) {
+    .NewPost {
+        max-width: 76vw;
+        }
+  }
+  @media screen and (min-width: 2850px) {
+    .NewPost {
+        max-width: 74vw;
+        }
+  }
+  @media screen and (min-width: 3000px) {
+    .NewPost {
+        max-width: 73vw;
+        }
+  }
+  @media screen and (min-width: 3150px) {
+    .NewPost {
+        max-width: 72vw;
+        }
+  }
+  @media screen and (min-width: 3300px) {
+    .NewPost {
+        max-width: 71vw;
+        }
+  }
+  @media screen and (min-width: 3450px) {
+    .NewPost {
+        max-width: 70vw;
+        }
+  }

@@ -1,5 +1,6 @@
 .logout {
     display: flex;
+    max-width: 87vw;
     flex-direction: row;
     align-items: center;
     justify-content: right;
@@ -34,3 +35,59 @@ letter-spacing: -1px;
 .user_name {
     color: #a06814
 }
+
+@media screen and (min-width: 1950px) {
+    .logout {
+        max-width: 86vw;
+        }
+  }
+  @media screen and (min-width: 2100px) {
+    .logout {
+        max-width: 84vw;
+        }
+  }
+  @media screen and (min-width: 2250px) {
+    .logout {
+        max-width: 82vw;
+        }
+  }
+  @media screen and (min-width: 2400px) {
+    .logout {
+        max-width: 80vw;
+        }
+  }
+  @media screen and (min-width: 2550px) {
+    .logout {
+        max-width: 78vw;
+        }
+  }
+  @media screen and (min-width: 2700px) {
+    .logout {
+        max-width: 76vw;
+        }
+  }
+  @media screen and (min-width: 2850px) {
+    .logout {
+        max-width: 74vw;
+        }
+  }
+  @media screen and (min-width: 3000px) {
+    .logout {
+        max-width: 73vw;
+        }
+  }
+  @media screen and (min-width: 3150px) {
+    .logout {
+        max-width: 72vw;
+        }
+  }
+  @media screen and (min-width: 3300px) {
+    .logout {
+        max-width: 71vw;
+        }
+  }
+  @media screen and (min-width: 3450px) {
+    .logout {
+        max-width: 70vw;
+        }
+  }
