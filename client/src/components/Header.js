@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { logout, selectUser } from "../reducers/user";
 import { resetPosts } from "../reducers/posts";
-import { resetPost } from "../reducers/post";
+import { resetPost} from "../reducers/post";
 
 import { useCookies} from 'react-cookie';
 

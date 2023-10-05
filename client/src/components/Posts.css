@@ -12,7 +12,6 @@
 
 .posts-item {
   position: relative;
-  overflow: auto;
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;

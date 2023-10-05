@@ -1,6 +1,6 @@
 import "./NewPost.css";
 import Upload from "./Upload";
-import React, { useState } from 'react';
+import { useState, Fragment } from 'react';
 import Modal from 'react-modal';
 import { useDispatch, useSelector } from "react-redux";
 import { newPost, preloadPostImg, selectNewPostImg } from  "../reducers/post";
@@ -45,7 +45,7 @@ const AddPost = () => {
   };
   const enabled = (title.length > 0 && imgPreload && !pressed);
   return (
-    <React.Fragment>
+    <Fragment>
       <div className="NewPost">
           <button onClick={setModalIsOpenToTrue}>New post</button>
           <Modal onRequestClose={setModalIsOpenToFalse} isOpen={modalIsOpen} className="newPostModal" appElement={document.getElementById('root') || undefined}>
@@ -57,7 +57,7 @@ const AddPost = () => {
       </div>
           </Modal>
       </div>
-    </React.Fragment>
+    </Fragment>
     );
 };
 

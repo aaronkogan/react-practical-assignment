@@ -21,7 +21,7 @@ export const postSlice = createSlice({
         preloadPostImg: (state, action) => {
             state.imgPre = action.payload;
         },
-        resetEvent: (state, action) => {
+        resetPostEvent: (state, action) => {
             state.query = {id: 0, event: "default"};
         },
         resetPost: (state, action) => {
@@ -30,9 +30,9 @@ export const postSlice = createSlice({
     },
 });
 
-export const { newPost, editPost, deletePost, preloadPostImg, resetEvent, resetPost } = postSlice.actions;
+export const { newPost, editPost, deletePost, preloadPostImg, resetPostEvent, resetPost } = postSlice.actions;
 
-export const selectQuery = (state) => state.post.query;
+export const selectPostQuery = (state) => state.post.query;
 
 export const selectNewPostImg = (state) => state.post.imgPre;
 

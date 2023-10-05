@@ -1,25 +1,24 @@
-import "./Rate.css";
 import { selectUser } from '../reducers/user';
-import { editPost, selectQuery } from "../reducers/post";
+import { editPost, selectPostQuery } from "../reducers/post";
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 
-const Rate = (props) => {
+const RatePost = (props) => {
     console.warn("Rate: "+ JSON.stringify(props));
     const dispatch = useDispatch();
     const user = useSelector(selectUser);
-    const postQuery = useSelector(selectQuery);
+    const postQuery = useSelector(selectPostQuery);
     const [localEvent, setLocalEvent] = useState("default");
     const [likes, setLikes] = useState([...props?.likes]);
     const [dislikes, setDislikes] = useState([...props?.dislikes]);
-    if ((postQuery.event === 'editPostDislikeRate' && postQuery.id === props.id) || postQuery.event === 'editPostLikeRate') {
-        const json = JSON.parse(JSON.stringify(postQuery));
-        json['event'] =  String(postQuery.event).slice(0, -4);
-        dispatch(editPost(json));
-        setLikes([...postQuery.likes]);
-        setDislikes([...postQuery.dislikes]);
-    }
     useEffect(() => {
+        if ((postQuery.event === 'editPostDislikeRate' && postQuery.id === props.id) || postQuery.event === 'editPostLikeRate') {
+            const json = JSON.parse(JSON.stringify(postQuery));
+            json['event'] =  String(postQuery.event).slice(0, -4);
+            dispatch(editPost(json));
+            setLikes([...postQuery.likes]);
+            setDislikes([...postQuery.dislikes]);
+        }
         const postEditLike = async (query,id) => {
             const res = await fetch(`http://localhost:8080/post/${id}`, {method: 'PUT', headers: {'Content-Type':'application/json'}, body: query});
             const json = await res.json();
@@ -32,7 +31,7 @@ const Rate = (props) => {
         }
         (localEvent==="like") && postEditLike(JSON.stringify({id: props.id, usename: user.name, title: props.title, likes: [...likes], dislikes: [...dislikes]}), props.id);
         (localEvent==="dislike") && postEditDislike(JSON.stringify({id: props.id, usename: user.name, title: props.title, likes: [...likes], dislikes: [...dislikes]}), props.id);
-        },[likes, dislikes, dispatch, props.id, localEvent, user.name, props.title]);
+        },[likes, dislikes, dispatch, props.id, localEvent, user.name, props.title, postQuery]);
         const isInArray = (list) => {
             for (var j=0; j<list.length; j++) {
                 if (list[j] === user.name) return true;
@@ -69,4 +68,4 @@ return (
 )
 }
 
-export default Rate;
+export default RatePost;

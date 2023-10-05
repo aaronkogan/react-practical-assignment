@@ -1,11 +1,11 @@
-import React from 'react';
+import { Component } from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import { Provider } from 'react-redux';
 import store from './store';
 import { CookiesProvider } from 'react-cookie';
 
-class Index extends React.Component {
+class Index extends Component {
   render() {
     return (
       <CookiesProvider>

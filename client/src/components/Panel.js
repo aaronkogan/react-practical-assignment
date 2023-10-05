@@ -1,9 +1,9 @@
 import "./Panel.css";
 import  RedactPost  from './EditPost';
-import  Rate  from "./Rate";
+import  RatePost  from './RatePost';
 import  Comments  from "./Comments";
 import { selectUser } from '../reducers/user';
-import { deletePost, selectQuery, editPost } from "../reducers/post";
+import { deletePost, selectPostQuery, editPost } from "../reducers/post";
 import { useDispatch, useSelector } from "react-redux";
 import { useState, useEffect  } from 'react';
 import Modal from 'react-modal';
@@ -11,7 +11,7 @@ import Modal from 'react-modal';
 const Panel = (props) => {
     const dispatch = useDispatch();
     const user = useSelector(selectUser);
-    const postQuery = useSelector(selectQuery);
+    const postQuery = useSelector(selectPostQuery);
     const [Event, setEvent] = useState("hide");
     const isOwner = (user.name === props.owner);
     const openInNewTab = url => { window.open(url, '_blank', 'noopener,noreferrer') };
@@ -41,13 +41,13 @@ const Panel = (props) => {
           <div>
             <button onClick={e => e.currentTarget === e.target && setEvent("editPost")} title="Edit post">&#9997;</button>
             <button onClick={e => e.currentTarget === e.target && setEvent("deletePost")} title="Delete post">&#128465;</button>
-            <Rate id={props.id} title={props.title} likes={props.likes} dislikes={props.dislikes}/>
-            <Comments/><button title="Open picture in new tab" onClick={e => e.currentTarget === e.target && openInNewTab(props.url)}>&#128444;</button>
+            <RatePost id={props.id} title={props.title} likes={props.likes} dislikes={props.dislikes}/>
+            <Comments id={props.id} title={props.title} owner={props.owner} url={props.url} date={props.date} comments={props.comments}/><button title="Open picture in new tab" onClick={e => e.currentTarget === e.target && openInNewTab(props.url)}>&#128444;</button>
           </div>
           :
           <div>
-            <Rate id={props.id} likes={props.likes} dislikes={props.dislikes}/>
-            <Comments/>
+            <RatePost id={props.id} likes={props.likes} dislikes={props.dislikes}/>
+            <Comments id={props.id} title={props.title} owner={props.owner} url={props.url} comments={props.comments}/>
             <button title="Open picture in new tab" onClick={e => e.currentTarget === e.target && openInNewTab(props.url)}>&#128444;</button></div>}
           <Modal onRequestClose={e => e.currentTarget === e.target && setEvent("hide")} isOpen={Event !== "hide"} className="panelModal"  appElement={document.getElementById('root') || undefined}>
           {(() => {

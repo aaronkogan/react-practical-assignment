@@ -1,25 +1,18 @@
 import "./Posts.css";
+import timeConverter from "../utills/TimeConverter";
+import isTouchScreenDevice from "../utills/TouchScreenDetect";
 import Pagination from "./Pagination";
 import Panel from "./Panel";
 import { useState, useEffect } from 'react';
 import {  useSelector, useDispatch } from "react-redux";
 import {  selectPosts, getPosts, selectSearchQuery, selectPage, searchQuery, currentPage } from "../reducers/posts";
-import { selectQuery, resetEvent } from "../reducers/post";
+import { selectPostQuery, resetPostEvent } from "../reducers/post";
 import Modal from 'react-modal';
-
-const isTouchScreenDevice = () => {
-  try{
-      document.createEvent('TouchEvent');
-      return true;
-  }catch(e){
-      return false;
-  }
-}
 
 const Posts = () => {
   const dispatch = useDispatch();
   const posts = useSelector(selectPosts);
-  const postQuery = useSelector(selectQuery);
+  const postQuery = useSelector(selectPostQuery);
   const search = useSelector(selectSearchQuery);
   const page = useSelector(selectPage);
   const [pagesCount, setPagesCount] = useState(1);
@@ -52,7 +45,8 @@ const Posts = () => {
       };
     switch (postQuery.event) {
       case 'firstStart': {
-        dispatch(resetEvent());
+        console.warn("posts firstStart event: "+ JSON.stringify(postQuery));
+        dispatch(resetPostEvent());
         lastPageFetch('http://localhost:8080/post/page/1');
         break;
       } 
@@ -63,19 +57,19 @@ const Posts = () => {
         if(parsed?.length < 9) {
           parsed?.push(request);
           if(search === '') {
-            dispatch(resetEvent());
+            dispatch(resetPostEvent());
             dispatch(currentPage(pagesCount));
             dispatch(getPosts({result : parsed}));
             } else {
             dispatch(searchQuery(""));
             document.getElementById('search').value="";
-            dispatch(resetEvent());
+            dispatch(resetPostEvent());
             lastPageFetch(`http://localhost:8080/post/page/1`);
             }
           } else {
             dispatch(searchQuery(""));
             document.getElementById('search').value="";
-            dispatch(resetEvent());
+            dispatch(resetPostEvent());
             lastPageFetch(`http://localhost:8080/post/page/1`); 
           }
         break;
@@ -87,7 +81,7 @@ const Posts = () => {
         for (var j = 0; j < parsed?.length; j++){
           if (parsed[j].id === postQuery.id){
             parsed[j] = request;
-            dispatch(resetEvent());
+            dispatch(resetPostEvent());
             dispatch(getPosts({result : parsed}));
             setModalEvent({Event: "hide"});
             break;
@@ -98,18 +92,18 @@ const Posts = () => {
       case 'deletePost': {
         if(parsed?.length > 1) {
           if(search === '') {
-            dispatch(resetEvent());
+            dispatch(resetPostEvent());
             fetchPosts(`http://localhost:8080/post/page/${page}`);
             } else {
             dispatch(searchQuery(""));
             document.getElementById('search').value="";
-            dispatch(resetEvent());
+            dispatch(resetPostEvent());
             lastPageFetch(`http://localhost:8080/post/page/1`); 
           }
         } else {
           dispatch(searchQuery(""));
           document.getElementById('search').value="";
-          dispatch(resetEvent());
+          dispatch(resetPostEvent());
           lastPageFetch(`http://localhost:8080/post/page/1`); 
         }
           setModalEvent({Event: "hide"});
@@ -122,7 +116,7 @@ const Posts = () => {
           for (var j = 0; j < parsed?.length; j++){
             if (parsed[j].id === postQuery.id){
               parsed[j] = request;
-              dispatch(resetEvent());
+              dispatch(resetPostEvent());
               dispatch(getPosts({result : parsed}));
               break;
             }
@@ -136,7 +130,7 @@ const Posts = () => {
           for (var j = 0; j < parsed?.length; j++){
             if (parsed[j].id === postQuery.id){
               parsed[j] = request;
-              dispatch(resetEvent());
+              dispatch(resetPostEvent());
               dispatch(getPosts({result : parsed}));
               break;
             }
@@ -152,7 +146,7 @@ const Posts = () => {
   if(parsed) {
     for(var i = 0; i < parsed.length; i++) {
       if (parsed[i] !== '')  {
-        parseResult.push([parsed[i].id, parsed[i].title, parsed[i].username, parsed[i].imageSrc, parsed[i].likes, parsed[i].dislikes, parsed[i].date, parsed[i].comments]);
+        parseResult.push([parsed[i].id, parsed[i].title, parsed[i].username, parsed[i].imageSrc, parsed[i].likes, parsed[i].dislikes, timeConverter(parsed[i].date), parsed[i].comments]);
         }
       }
     parseResult.reverse();
@@ -164,7 +158,7 @@ const Posts = () => {
         isTouchScreenDevice() ?   
             <div className="posts-item" onClick={e => e.currentTarget === e.target && setModalIsOpenToTrue(post[0], "fullscreen", ({ title : post[1], owner: post[2], url : post[3], likes: post[4], dislikes: post[5], date: post[6], comments: post[7] }))} style={{backgroundImage: `url(${post[3]})`}} key={post[0]}><div>{post[0]}</div>           
               {<div>
-                <div onClick={e => e.currentTarget === e.target && setModalIsOpenToTrue(post[0], "fullscreen", ({ title : post[1], owner: post[2], url : post[3], likes: post[4], dislikes: post[5], date: post[6], comments: post[7] }))}>{post[1]}<br/>by {post[2]}</div>
+                <div onClick={e => e.currentTarget === e.target && setModalIsOpenToTrue(post[0], "fullscreen", ({ title : post[1], owner: post[2], url : post[3], likes: post[4], dislikes: post[5], date: post[6], comments: post[7] }))}>{post[6]}<br/>{post[1]} by {post[2]}</div>
                   <div style={{paddingLeft : "-25%", justifyContent: "center", position: "center", display: "flex", flexDirection: "row"}}>
                     <Panel id={post[0]} title={post[1]} owner={post[2]} url={post[3]} likes={post[4]} dislikes={post[5]} date={post[6]} comments={post[7]}/>
                   </div>
@@ -172,16 +166,15 @@ const Posts = () => {
             </div> 
             :
             <div className="posts-item" onMouseEnter={() => setHoverId(post[0])}  onClick={e => e.currentTarget === e.target && setModalIsOpenToTrue(post[0], "fullscreen", ({ title : post[1], owner: post[2], url : post[3], likes: post[4], dislikes: post[5], date: post[6], comments: post[7] }))} style={{backgroundImage: `url(${post[3]})`}} key={post[0]}><div>{post[0]}</div>           
-            {(hoverId === post[0]) ? 
+            {(hoverId === post[0]) && 
               <div>
-                <div onClick={e => e.currentTarget === e.target && setModalIsOpenToTrue(post[0], "fullscreen", ({ title : post[1], owner: post[2], url : post[3], likes: post[4], dislikes: post[5], date: post[6], comments: post[7] }))}>{post[1]}<br/>by {post[2]}</div>
-              <div style={{paddingLeft : "-25%", justifyContent: "center", position: "center", display: "flex", flexDirection: "row"}}>
-                <Panel id={post[0]} title={post[1]} owner={post[2]} url={post[3]} likes={post[4]} dislikes={post[5]} date={post[6]} comments={post[7]}/></div>
-              </div> 
-            : 
-              <div onClick={e => e.currentTarget === e.target && setModalIsOpenToTrue(post[0], "fullscreen", ({ title : post[1], owner: post[2], url : post[3] }))} style={{color: "Transparent"}}>{post[1]}<br/>by {post[2]} {post[8]}</div>
-            }
+                <div onClick={e => e.currentTarget === e.target && setModalIsOpenToTrue(post[0], "fullscreen", ({ title : post[1], owner: post[2], url : post[3], likes: post[4], dislikes: post[5], date: post[6], comments: post[7] }))}>{post[6]}<br/>{post[1]} by {post[2]}</div>
+                  <div style={{paddingLeft : "-25%", justifyContent: "center", position: "center", display: "flex", flexDirection: "row"}}>
+                    <Panel id={post[0]} title={post[1]} owner={post[2]} url={post[3]} likes={post[4]} dislikes={post[5]} date={post[6]} comments={post[7]}/></div>
+                </div> 
+                }
           </div> 
+          
       ))}
       <div className="posts-item">
         <footer style={{ justifyContent: "center", display: "flex", flexDirection: "row" }}><Pagination pagesCount={pagesCount}/></footer>
@@ -192,9 +185,10 @@ const Posts = () => {
           if (modalEvent.Event === "fullscreen") {
           return (
             <div>
-              {modalEvent.payload.title} by {modalEvent.payload.owner}
+            {modalEvent.payload.date} <br/>
+            {modalEvent.payload.title} by {modalEvent.payload.owner}
               <img onClick={e => e.currentTarget === e.target && setModalIsOpenToFalse} alt={modalEvent.payload.title} className={`main-modal-${modalEvent.Event}-img`} src={modalEvent.payload.url}></img>
-              <div className="posts-panel"><Panel id={modalEvent.id} title={modalEvent.payload.title} owner={modalEvent.payload.owner} url={modalEvent.payload.url} likes={modalEvent.payload.likes} dislikes={modalEvent.payload.dislikes} comments={modalEvent.payload.comments}/></div>
+              <div className="posts-panel"><Panel id={modalEvent.id} title={modalEvent.payload.title} owner={modalEvent.payload.owner} url={modalEvent.payload.url} likes={modalEvent.payload.likes} dislikes={modalEvent.payload.dislikes} date={modalEvent.payload.date} comments={modalEvent.payload.comments}/></div>
             </div>
           )
         }
