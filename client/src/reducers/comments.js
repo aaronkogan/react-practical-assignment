@@ -1,5 +1,4 @@
 import { createSlice  } from "@reduxjs/toolkit";
-import { useDispatch, useSelector } from "react-redux";
 
 const initialState = {
     query: {id: 0, event: "firstStart"}
@@ -25,6 +24,10 @@ export const commentsSlice = createSlice({
             console.warn("REDUX comments resetCommentsEvent: "+ JSON.stringify(action.payload));
             state.query = {id: 0, event: "default"};
         },
+        hideCommentsEvent: (state, action) => {
+            console.warn("REDUX comments hideCommentsEvent: "+ JSON.stringify(action.payload));
+            state.query = {event: "hideComments"};
+        },
         resetComments: (state, action) => {
             console.warn("REDUX commentsresetComments: "+ JSON.stringify(action.payload));
             Object.assign(state, initialState);
@@ -32,7 +35,7 @@ export const commentsSlice = createSlice({
     },
 });
 
-export const { newComment, editComent, deleteComment, resetCommentsEvent, resetComments } = commentsSlice.actions;
+export const { newComment, editComent, deleteComment, resetCommentsEvent, hideCommentsEvent, resetComments } = commentsSlice.actions;
 
 export const selectCommentsQuery = (state) => state.comments.query;
 

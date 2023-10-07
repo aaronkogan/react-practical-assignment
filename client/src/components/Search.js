@@ -1,5 +1,4 @@
 import "./Search.css";
-import timeConverter from "../utills/TimeConverter";
 import React, { Component } from 'react';
 import { connect } from "react-redux";
 import _ from 'lodash';
@@ -38,6 +37,7 @@ class Search extends Component {
     return (
       <div className="search">
         <input 
+        onFocus={() => this.props.hideCommentsEvent()}
         autoFocus
         placeholder="Search"
         type="text"
@@ -63,6 +63,9 @@ const mapDispatchToProps = dispatch => ({
   ),
   currentPage: (json) => (
     dispatch({ type: "posts/currentPage", payload: json })
+  ),
+  hideCommentsEvent: (json) => (
+    dispatch({ type: "comments/hideCommentsEvent", payload: json  })
   )
 })
 

@@ -1,23 +1,40 @@
 import "./Comments.css";
-import { selectCommentsQuery, newComment, deleteComment, editComent } from "../reducers/comments";
+import { selectCommentsQuery, newComment, resetCommentsEvent, deleteComment, editComment } from "../reducers/comments";
 import { useDispatch, useSelector } from "react-redux";
 import Modal from 'react-modal';
 import { useState, useEffect  } from 'react';
 
 const Comments = (props) => {
+  console.warn("Comments: "+ JSON.stringify(props));
   const dispatch = useDispatch();
+  const commentsQuery = useSelector(selectCommentsQuery);
   const [newCommentInput, setNewCommentInput] = useState("");
   const [enabled, setEnable] = useState(false);
+  const [comments, setComments] = useState(props.comments);
+  const [showComments, setShowComments] = useState(false);
   const [localEvent, setLocalEvent] = useState("hide"); 
   const addComment = async (query) => {
     const res = await fetch('http://localhost:8080/comment', {method: 'POST', headers: {'Content-Type':'application/json'}, body: query});
     const json = await res.json();
-    json.success && dispatch(newComment(json.result))};   
+    if(json.success) {
+      json.result = { ...json.result, event: 'addCommentPanel'};
+      dispatch(newComment(json.result));
+      setLocalEvent("hide");
+    }
+  }
+  const handleShowComments = (e) => {
+    (!showComments) ? setLocalEvent("showComments") :  setLocalEvent("hideComments")
+    e.preventDefault();
+  };
+  const handleClickNewComment = (e) => {
+    setLocalEvent("newCommentModal");
+    setShowComments(false);
+    e.preventDefault();
+  };
   const handleNewComment = (e) => {
     setEnable(false);
     addComment(JSON.stringify({postId: props.id, username: props.owner, text: newCommentInput}));
     setNewCommentInput("");
-    setLocalEvent("hide");
     e.preventDefault();
   };
   const handleHideNewComment = (e) => {
@@ -26,44 +43,53 @@ const Comments = (props) => {
     setLocalEvent("hide");
     e.preventDefault();
   };
+  if(localEvent === "showComments") {
+    setShowComments(true);
+    setLocalEvent("hide");
+    }
+  if(localEvent === "hideComments") {
+    setShowComments(false);
+    setLocalEvent("hide");
+    }
   useEffect(() => {
     (newCommentInput.length > 0) ? setEnable(true) : setEnable(false);
-
-  },[newCommentInput.length]);
+    if ((commentsQuery.event === 'addCommentPanel' && commentsQuery.postId === props.id)) {
+      const json = JSON.parse(JSON.stringify(commentsQuery));
+      delete json['event'];
+      setComments([...comments, json]);
+      json.event = 'addComment';
+      dispatch(newComment(json));
+    }
+    if (commentsQuery.event === 'hideComments') {
+      setShowComments(false);
+      dispatch(resetCommentsEvent);
+    }
+  },[newCommentInput.length, props.id, commentsQuery, dispatch, comments]);
 
 return (
     <>
         <button 
-            className="msg-pressed"
+            className={(showComments) ? "msg-pressed" : "msg-unpressed"}
             aria-pressed={false}
-            onClick={e => e.currentTarget === e.target && setLocalEvent("showCommentsModal")} 
-            title="Show comments">&#128172; <small onClick={e => e.currentTarget === e.target && setLocalEvent("showCommentsModal")} >34</small>
+            onClick={e => e.currentTarget === e.target && handleShowComments(e)} 
+            disabled={(!comments?.length>0)}
+            title="Show comments">&#128172; 
+            <small onClick={e => e.currentTarget === e.target && handleShowComments(e)} > {(comments?.length>0) && comments.length}</small>
         </button>
         <button 
-            onClick={e => e.currentTarget === e.target && setLocalEvent("newCommentModal")} 
+            onClick={e => e.currentTarget === e.target && handleClickNewComment(e)} 
             title="New comment">&#128488;<small onClick={e => e.currentTarget === e.target && setLocalEvent("newCommentModal")} style={{ position: "absolute", marginLeft: "-20px", top: "2px"}}>+</small>
         </button>
-        {(localEvent === "showCommentsModal") &&
-        <div className="wrapper">
+        <div style={{display: (showComments) ? "inline-block" : "none"}} className="wrapper">
             <div className="shape bubble">
-                heyfwfwef<br/>
-                heydfdsfsf<br/>
-                hey sdadsad ffdsfsdf f ef .ef ef ef /<br/>
-                heydsfdsfds<br/>
-                hesdfsdfsdy<br/>
-                hesdffdkfdfdkv fjdkjfkjfkdj fkdjfdkfjslkfjlkfjsldkjfgsldkgjfsldkgjfsldkgjsldkjgfsldkjglsdfy<br/>
-                hey<br/>
-                hey<br/>
-                hesdfsdfdsfy<br/>
-                hey<br/>
-                hsdfsdfsdfey<br/>
-                hsdfsdfey<br/>
+              {comments.map((comment) => (  
+                <div className="msg" key={JSON.stringify(comment.id)}>{JSON.stringify(comment)}</div>
+                ))}  
             </div>
         </div>
-        }
           <Modal 
             onRequestClose={e => e.currentTarget === e.target && handleHideNewComment(e)} 
-            isOpen={localEvent !== "hide" && localEvent !== "showCommentsModal"} 
+            isOpen={localEvent !== "hide" && localEvent !== "showComments" && localEvent !== "hideComments" } 
             className="modal"  
             appElement={document.getElementById('root') || undefined}>
           {(() => {
@@ -89,7 +115,7 @@ return (
           })()}
           </ Modal>
     </>
-)
+  )
 }
 
 export default Comments;

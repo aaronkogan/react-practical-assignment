@@ -4,6 +4,7 @@ import { useState, Fragment } from 'react';
 import Modal from 'react-modal';
 import { useDispatch, useSelector } from "react-redux";
 import { newPost, preloadPostImg, selectNewPostImg } from  "../reducers/post";
+import { hideCommentsEvent } from "../reducers/comments";
 import { selectUser } from '../reducers/user';
 
 const AddPost = () => {
@@ -14,7 +15,8 @@ const AddPost = () => {
   const [modalIsOpen,setModalIsOpen] = useState(false);
   const [pressed, setPressed] = useState(false);
   const setModalIsOpenToTrue =()=>{
-      setModalIsOpen(true)
+    dispatch(hideCommentsEvent());
+    setModalIsOpen(true)
   }
   const setModalIsOpenToFalse =()=>{
       setModalIsOpen(false);

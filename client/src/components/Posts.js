@@ -2,10 +2,11 @@ import "./Posts.css";
 import timeConverter from "../utills/TimeConverter";
 import isTouchScreenDevice from "../utills/TouchScreenDetect";
 import Pagination from "./Pagination";
-import Panel from "./Panel";
+import PostPanel from "./PostPanel";
 import { useState, useEffect } from 'react';
 import {  useSelector, useDispatch } from "react-redux";
 import {  selectPosts, getPosts, selectSearchQuery, selectPage, searchQuery, currentPage } from "../reducers/posts";
+import { selectCommentsQuery, resetCommentsEvent, hideCommentsEvent } from "../reducers/comments";
 import { selectPostQuery, resetPostEvent } from "../reducers/post";
 import Modal from 'react-modal';
 
@@ -13,6 +14,7 @@ const Posts = () => {
   const dispatch = useDispatch();
   const posts = useSelector(selectPosts);
   const postQuery = useSelector(selectPostQuery);
+  const commentsQuery = useSelector(selectCommentsQuery);
   const search = useSelector(selectSearchQuery);
   const page = useSelector(selectPage);
   const [pagesCount, setPagesCount] = useState(1);
@@ -23,6 +25,7 @@ const Posts = () => {
     payload: {}
   });
   const setModalIsOpenToTrue = (itemId, e, p) => {
+    dispatch(hideCommentsEvent());
     setModalEvent({id: itemId, Event: e, payload: p});
   };
   const setModalIsOpenToFalse  =() => {
@@ -43,6 +46,28 @@ const Posts = () => {
       json.success && dispatch(currentPage(json.page)) && dispatch(getPosts(json));
       console.warn("FetchPosts: "+ JSON.stringify(json));
       };
+    switch (commentsQuery.event) {
+      case 'addComment': {
+        console.warn("posts addComment: "+ JSON.stringify(commentsQuery));
+        const request = JSON.parse(JSON.stringify(commentsQuery));
+        delete request["event"];
+        for (var j = 0; j < parsed?.length; j++){
+          if (parsed[j].id === commentsQuery.postId){
+            parsed[j] = {id: parsed[j].id, title: parsed[j].title, username: parsed[j].username, imageSrc: parsed[j].imageSrc, likes: parsed[j].likes, dislikes: parsed[j].dislikes, date: parsed[j].date, comments: [...parsed[j]?.comments, request]};
+            console.warn("QQ!!!!!!!!!!!!!!!: "+ JSON.stringify(parsed[j]));
+            dispatch(resetCommentsEvent());
+            dispatch(getPosts({result : parsed}));
+            setModalEvent({Event: "hide"});            
+            break;
+          }
+        }
+        break;
+      }
+      default: {
+        console.warn("Posts Comments unregistered event DEBUG: "+ JSON.stringify(commentsQuery));
+        break;
+      }
+    }
     switch (postQuery.event) {
       case 'firstStart': {
         console.warn("posts firstStart event: "+ JSON.stringify(postQuery));
@@ -80,6 +105,7 @@ const Posts = () => {
         delete request["event"];
         for (var j = 0; j < parsed?.length; j++){
           if (parsed[j].id === postQuery.id){
+            request.comments = parsed[j].comments;
             parsed[j] = request;
             dispatch(resetPostEvent());
             dispatch(getPosts({result : parsed}));
@@ -115,6 +141,7 @@ const Posts = () => {
           delete request["event"];
           for (var j = 0; j < parsed?.length; j++){
             if (parsed[j].id === postQuery.id){
+              request.comments = parsed[j].comments;
               parsed[j] = request;
               dispatch(resetPostEvent());
               dispatch(getPosts({result : parsed}));
@@ -129,6 +156,7 @@ const Posts = () => {
           delete request["event"];
           for (var j = 0; j < parsed?.length; j++){
             if (parsed[j].id === postQuery.id){
+              request.comments = parsed[j].comments;
               parsed[j] = request;
               dispatch(resetPostEvent());
               dispatch(getPosts({result : parsed}));
@@ -138,11 +166,11 @@ const Posts = () => {
           break;
         }
         default: {
-          console.warn("Posts unregistered event: "+ JSON.stringify(postQuery));
+          console.warn("Posts unregistered event DEBUG: "+ JSON.stringify(postQuery));
           break;
         }
     }
-     },[postQuery, dispatch, parsed, search, page, pagesCount]);
+     },[postQuery, commentsQuery, dispatch, parsed, search, page, pagesCount]);
   if(parsed) {
     for(var i = 0; i < parsed.length; i++) {
       if (parsed[i] !== '')  {
@@ -160,7 +188,7 @@ const Posts = () => {
               {<div>
                 <div onClick={e => e.currentTarget === e.target && setModalIsOpenToTrue(post[0], "fullscreen", ({ title : post[1], owner: post[2], url : post[3], likes: post[4], dislikes: post[5], date: post[6], comments: post[7] }))}>{post[6]}<br/>{post[1]} by {post[2]}</div>
                   <div style={{paddingLeft : "-25%", justifyContent: "center", position: "center", display: "flex", flexDirection: "row"}}>
-                    <Panel id={post[0]} title={post[1]} owner={post[2]} url={post[3]} likes={post[4]} dislikes={post[5]} date={post[6]} comments={post[7]}/>
+                    <PostPanel id={post[0]} title={post[1]} owner={post[2]} url={post[3]} likes={post[4]} dislikes={post[5]} date={post[6]} comments={post[7]}/>
                   </div>
               </div>}
             </div> 
@@ -170,7 +198,7 @@ const Posts = () => {
               <div>
                 <div onClick={e => e.currentTarget === e.target && setModalIsOpenToTrue(post[0], "fullscreen", ({ title : post[1], owner: post[2], url : post[3], likes: post[4], dislikes: post[5], date: post[6], comments: post[7] }))}>{post[6]}<br/>{post[1]} by {post[2]}</div>
                   <div style={{paddingLeft : "-25%", justifyContent: "center", position: "center", display: "flex", flexDirection: "row"}}>
-                    <Panel id={post[0]} title={post[1]} owner={post[2]} url={post[3]} likes={post[4]} dislikes={post[5]} date={post[6]} comments={post[7]}/></div>
+                    <PostPanel id={post[0]} title={post[1]} owner={post[2]} url={post[3]} likes={post[4]} dislikes={post[5]} date={post[6]} comments={post[7]}/></div>
                 </div> 
                 }
           </div> 
@@ -188,7 +216,7 @@ const Posts = () => {
             {modalEvent.payload.date} <br/>
             {modalEvent.payload.title} by {modalEvent.payload.owner}
               <img onClick={e => e.currentTarget === e.target && setModalIsOpenToFalse} alt={modalEvent.payload.title} className={`main-modal-${modalEvent.Event}-img`} src={modalEvent.payload.url}></img>
-              <div className="posts-panel"><Panel id={modalEvent.id} title={modalEvent.payload.title} owner={modalEvent.payload.owner} url={modalEvent.payload.url} likes={modalEvent.payload.likes} dislikes={modalEvent.payload.dislikes} date={modalEvent.payload.date} comments={modalEvent.payload.comments}/></div>
+              <div className="posts-panel"><PostPanel id={modalEvent.id} title={modalEvent.payload.title} owner={modalEvent.payload.owner} url={modalEvent.payload.url} likes={modalEvent.payload.likes} dislikes={modalEvent.payload.dislikes} date={modalEvent.payload.date} comments={modalEvent.payload.comments}/></div>
             </div>
           )
         }

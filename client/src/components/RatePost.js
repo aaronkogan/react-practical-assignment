@@ -1,5 +1,6 @@
 import { selectUser } from '../reducers/user';
 import { editPost, selectPostQuery } from "../reducers/post";
+import { hideCommentsEvent } from "../reducers/comments";
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 
@@ -12,7 +13,8 @@ const RatePost = (props) => {
     const [likes, setLikes] = useState([...props?.likes]);
     const [dislikes, setDislikes] = useState([...props?.dislikes]);
     useEffect(() => {
-        if ((postQuery.event === 'editPostDislikeRate' && postQuery.id === props.id) || postQuery.event === 'editPostLikeRate') {
+        if ((postQuery.event === 'editPostDislikeRate' && postQuery.id === props.id) || (postQuery.event === 'editPostLikeRate' && postQuery.id === props.id)) {
+            dispatch(hideCommentsEvent());
             const json = JSON.parse(JSON.stringify(postQuery));
             json['event'] =  String(postQuery.event).slice(0, -4);
             dispatch(editPost(json));
@@ -31,6 +33,7 @@ const RatePost = (props) => {
         }
         (localEvent==="like") && postEditLike(JSON.stringify({id: props.id, usename: user.name, title: props.title, likes: [...likes], dislikes: [...dislikes]}), props.id);
         (localEvent==="dislike") && postEditDislike(JSON.stringify({id: props.id, usename: user.name, title: props.title, likes: [...likes], dislikes: [...dislikes]}), props.id);
+        setLocalEvent("default");
         },[likes, dislikes, dispatch, props.id, localEvent, user.name, props.title, postQuery]);
         const isInArray = (list) => {
             for (var j=0; j<list.length; j++) {
