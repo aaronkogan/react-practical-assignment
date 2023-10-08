@@ -184,21 +184,36 @@ const Posts = () => {
       <div className="posts-container">
       {parseResult.map((post) => (  
         isTouchScreenDevice() ?   
-            <div className="posts-item" onClick={e => e.currentTarget === e.target && setModalIsOpenToTrue(post[0], "fullscreen", ({ title : post[1], owner: post[2], url : post[3], likes: post[4], dislikes: post[5], date: post[6], comments: post[7] }))} style={{backgroundImage: `url(${post[3]})`}} key={post[0]}><div>{post[0]}</div>           
+            <div 
+              className="posts-item" 
+              onClick={e => e.currentTarget === e.target && setModalIsOpenToTrue(post[0], "fullscreen", ({ title : post[1], owner: post[2], url : post[3], likes: post[4], dislikes: post[5], date: post[6], comments: post[7] }))} 
+              style={{backgroundImage: `url(${post[3]})`}} 
+              key={post[0]}><div>{post[0]}</div>           
               {<div>
-                <div onClick={e => e.currentTarget === e.target && setModalIsOpenToTrue(post[0], "fullscreen", ({ title : post[1], owner: post[2], url : post[3], likes: post[4], dislikes: post[5], date: post[6], comments: post[7] }))}>{post[6]}<br/>{post[1]} by {post[2]}</div>
-                  <div style={{paddingLeft : "-25%", justifyContent: "center", position: "center", display: "flex", flexDirection: "row"}}>
-                    <PostPanel id={post[0]} title={post[1]} owner={post[2]} url={post[3]} likes={post[4]} dislikes={post[5]} date={post[6]} comments={post[7]}/>
-                  </div>
+                <div 
+                  onClick={e => e.currentTarget === e.target && 
+                  setModalIsOpenToTrue(post[0], "fullscreen", ({ title : post[1], owner: post[2], url : post[3], likes: post[4], dislikes: post[5], date: post[6], comments: post[7] }))}>{post[6]}<br/>{post[1]} by {post[2]}
+                </div>
+                <div style={{paddingLeft : "-25%", justifyContent: "center", position: "center", display: "flex", flexDirection: "row"}}>
+                  <PostPanel id={post[0]} title={post[1]} owner={post[2]} url={post[3]} likes={post[4]} dislikes={post[5]} date={post[6]} comments={post[7]}/>
+                </div>
               </div>}
             </div> 
             :
-            <div className="posts-item" onMouseEnter={() => setHoverId(post[0])}  onClick={e => e.currentTarget === e.target && setModalIsOpenToTrue(post[0], "fullscreen", ({ title : post[1], owner: post[2], url : post[3], likes: post[4], dislikes: post[5], date: post[6], comments: post[7] }))} style={{backgroundImage: `url(${post[3]})`}} key={post[0]}><div>{post[0]}</div>           
-            {(hoverId === post[0]) && 
+            <div 
+              className="posts-item" 
+              onMouseEnter={() => setHoverId(post[0])}  
+              onClick={e => e.currentTarget === e.target &&
+              setModalIsOpenToTrue(post[0], "fullscreen", ({ title : post[1], owner: post[2], url : post[3], likes: post[4], dislikes: post[5], date: post[6], comments: post[7] }))} 
+              style={{backgroundImage: `url(${post[3]})`}} 
+              key={post[0]}><div>{post[0]}</div> {(hoverId === post[0]) && 
               <div>
-                <div onClick={e => e.currentTarget === e.target && setModalIsOpenToTrue(post[0], "fullscreen", ({ title : post[1], owner: post[2], url : post[3], likes: post[4], dislikes: post[5], date: post[6], comments: post[7] }))}>{post[6]}<br/>{post[1]} by {post[2]}</div>
+                <div 
+                  onClick={e => e.currentTarget === e.target &&
+                  setModalIsOpenToTrue(post[0], "fullscreen", ({ title : post[1], owner: post[2], url : post[3], likes: post[4], dislikes: post[5], date: post[6], comments: post[7] }))}>{post[6]}<br/>{post[1]} by {post[2]}</div>
                   <div style={{paddingLeft : "-25%", justifyContent: "center", position: "center", display: "flex", flexDirection: "row"}}>
-                    <PostPanel id={post[0]} title={post[1]} owner={post[2]} url={post[3]} likes={post[4]} dislikes={post[5]} date={post[6]} comments={post[7]}/></div>
+                    <PostPanel id={post[0]} title={post[1]} owner={post[2]} url={post[3]} likes={post[4]} dislikes={post[5]} date={post[6]} comments={post[7]}/>
+                  </div>
                 </div> 
                 }
           </div> 

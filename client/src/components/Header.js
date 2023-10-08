@@ -3,7 +3,9 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { logout, selectUser } from "../reducers/user";
 import { resetPosts } from "../reducers/posts";
-import { resetPost} from "../reducers/post";
+import { resetPost } from "../reducers/post";
+import { resetComments } from "../reducers/comments";
+
 
 import { useCookies} from 'react-cookie';
 
@@ -19,6 +21,7 @@ const handleLogout = (e) => {
   e.preventDefault();
   dispatch(resetPosts());
   dispatch(resetPost());
+  dispatch(resetComments());
   dispatch(logout());
 };
 return (

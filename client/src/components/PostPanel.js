@@ -43,7 +43,8 @@ const PostPanel = (props) => {
             <button onClick={e => e.currentTarget === e.target && dispatch(hideCommentsEvent()) && setEvent("editPost")} title="Edit post">&#9997;</button>
             <button onClick={e => e.currentTarget === e.target && dispatch(hideCommentsEvent()) && setEvent("deletePost")} title="Delete post">&#128465;</button>
             <RatePost id={props.id} title={props.title} likes={props.likes} dislikes={props.dislikes}/>
-            <Comments id={props.id} title={props.title} owner={props.owner} url={props.url} date={props.date} comments={props.comments}/><button title="Open picture in new tab" onClick={e => e.currentTarget === e.target && openInNewTab(props.url)}>&#128444;</button>
+            <Comments id={props.id} title={props.title} owner={props.owner} url={props.url} date={props.date} comments={props.comments}/>
+            <button title="Open picture in new tab" onClick={e => e.currentTarget === e.target && openInNewTab(props.url)}>&#128444;</button>
           </div>
           :
           <div>

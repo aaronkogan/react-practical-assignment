@@ -35,7 +35,7 @@ export const commentsSlice = createSlice({
     },
 });
 
-export const { newComment, editComent, deleteComment, resetCommentsEvent, hideCommentsEvent, resetComments } = commentsSlice.actions;
+export const { newComment, editComment, deleteComment, resetCommentsEvent, hideCommentsEvent, resetComments } = commentsSlice.actions;
 
 export const selectCommentsQuery = (state) => state.comments.query;
 

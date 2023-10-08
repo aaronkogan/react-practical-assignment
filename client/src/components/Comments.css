@@ -84,14 +84,15 @@
 
 .wrapper{
 	position:absolute;
-	margin-top:-124px;
+	margin-top:-144px;
     margin-left:25px;
     padding: 10px;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
 	font-family: helvetica, Arial, sans-serif;
-	font-weight: normal;	
+	font-size: 90%;
+	font-weight: normal;
 }
 
 .shape{
@@ -105,7 +106,7 @@
 	border-radius: 10px;
     width: 250px;
     max-width: 17vw;
-    height: 200px;
+    height: 230px;
     overflow-y: scroll;
 	overflow-x: none;
 	white-space: nowrap;
@@ -117,16 +118,18 @@
 	box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.15);
 }
 
-.msg{
-	padding-left: 10px;
+.msg-container{
 	background-image: -webkit-linear-gradient(top, #fdfdfd, #f3f3f4);
     opacity: 0.9;
 	border-radius: 10px;
-	min-width: 100%;
 	width: 310px;
-    height: 40px;
-    overflow: scroll;
-	word-break:keep-all;
+	min-width: 95%;
+    height: 60px;
+	padding-right: 14%;
+	margin-top: 4px;
+    overflow-x: scroll;
+	overflow-y: none;
+	word-break: keep-all;
 	white-space: nowrap;
     scrollbar-color: red orange;
     scrollbar-width: thin;
@@ -135,11 +138,19 @@
 	box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.15);
 }
 
+.msg{
+display: flex;
+flex-direction: column;
+column-gap: 1rem;
+column-count: 2;
+}
+
+
 .bubble:after{
 	margin-top: 20px;
 	content: "";
 	position: fixed;
-	top: 83.6%;
+	top: 85.6%;
 	left: 35%;
 	-webkit-transform: rotate(45deg);
 	-moz-transform: rotate(45deg);
@@ -151,9 +162,7 @@
 	border-color: transparent #f3f3f4 #f3f3f4 transparent;
 }
 @media screen and (min-width: 150px) {
-	.wrapper{
-		margin-top:-140px;
-	}
+
     .shape {
         margin-left: -65px;
 		padding-right: 100px;
@@ -162,21 +171,34 @@
 		left: 50%;
 		display: none;
 	}
-  }
-  @media screen and (min-width: 350px) {
-	.wrapper{
-		margin-top:-124px;
+	.msg-container{
+		max-width: 400%;
 	}
+
+  }
+@media screen and (min-width: 200px) {
+	.msg-container{
+		max-width: 250%;
+	}
+}
+@media screen and (min-width: 350px) {
+
 	.bubble:after{
 		display: inline-block;
 	}
+	.msg-container{
+		max-width: 200%;
+	}
   }
-  @media screen and (min-width: 470px) {
+@media screen and (min-width: 470px) {
     .bubble:after{
 		left: 45%;
-  }
+  }	
+  	.msg-container{
+		max-width: 158%;
+	}
 }
-  @media screen and (min-width: 1000px) {
+@media screen and (min-width: 1000px) {
     .shape {
         margin-left: -55px;
 		padding-right: 100px;
@@ -188,3 +210,18 @@
 		margin-left:35px;
 	}
   }
+@media screen and (min-width: 800px) {
+    .msg-container{
+		max-width: 136%;
+	}
+}
+@media screen and (min-width: 1280px) {
+    .msg-container{
+		max-width: 129%;
+	}
+}
+@media screen and (min-width: 1480px) {
+    .msg-container{
+		max-width: 125%;
+	}
+}

@@ -1,4 +1,7 @@
 import "./Comments.css";
+import CommentPanel from "./CommentPanel";
+import { selectUser } from "../reducers/user";
+import timeConverter from "../utills/TimeConverter";
 import { selectCommentsQuery, newComment, resetCommentsEvent, deleteComment, editComment } from "../reducers/comments";
 import { useDispatch, useSelector } from "react-redux";
 import Modal from 'react-modal';
@@ -7,6 +10,7 @@ import { useState, useEffect  } from 'react';
 const Comments = (props) => {
   console.warn("Comments: "+ JSON.stringify(props));
   const dispatch = useDispatch();
+  const user = useSelector(selectUser);
   const commentsQuery = useSelector(selectCommentsQuery);
   const [newCommentInput, setNewCommentInput] = useState("");
   const [enabled, setEnable] = useState(false);
@@ -33,7 +37,7 @@ const Comments = (props) => {
   };
   const handleNewComment = (e) => {
     setEnable(false);
-    addComment(JSON.stringify({postId: props.id, username: props.owner, text: newCommentInput}));
+    addComment(JSON.stringify({postId: props.id, username: user.name, text: newCommentInput}));
     setNewCommentInput("");
     e.preventDefault();
   };
@@ -83,7 +87,13 @@ return (
         <div style={{display: (showComments) ? "inline-block" : "none"}} className="wrapper">
             <div className="shape bubble">
               {comments.map((comment) => (  
-                <div className="msg" key={JSON.stringify(comment.id)}>{JSON.stringify(comment)}</div>
+                <div className="msg-container" key={JSON.stringify(comment.id)}>
+                  <div className="msg">
+                  <div>{comment.username} {timeConverter(comment.date)}</div>
+                  <CommentPanel postId={props.id} id={comment.id} title={props.title} owner={comment.username} url={props.url} date={comment.date} comments={props.comments}/>
+                  <div>{comment.text}</div>
+                </div>
+                </div>
                 ))}  
             </div>
         </div>
