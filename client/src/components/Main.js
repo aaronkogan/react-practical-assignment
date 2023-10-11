@@ -2,7 +2,7 @@ import React from "react";
 import Posts from './Posts';
 import Header from './Header';
 import Search from './Search';
-import AddPost from './NewPost';
+import AddPost from './PostAdd';
 
 const Main = () => {
   return (

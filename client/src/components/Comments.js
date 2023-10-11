@@ -2,7 +2,7 @@ import "./Comments.css";
 import CommentPanel from "./CommentPanel";
 import { selectUser } from "../reducers/user";
 import timeConverter from "../utills/TimeConverter";
-import { selectCommentsQuery, newComment, resetCommentsEvent, deleteComment, editComment } from "../reducers/comments";
+import { selectCommentsQuery, newComment, deleteComment, editComment, resetCommentsEvent } from "../reducers/comments";
 import { useDispatch, useSelector } from "react-redux";
 import Modal from 'react-modal';
 import { useState, useEffect  } from 'react';
@@ -14,7 +14,7 @@ const Comments = (props) => {
   const commentsQuery = useSelector(selectCommentsQuery);
   const [newCommentInput, setNewCommentInput] = useState("");
   const [enabled, setEnable] = useState(false);
-  const [comments, setComments] = useState(props.comments);
+  const [comments, setComments] = useState([...props.comments]);
   const [showComments, setShowComments] = useState(false);
   const [localEvent, setLocalEvent] = useState("hide"); 
   const addComment = async (query) => {
@@ -57,18 +57,52 @@ const Comments = (props) => {
     }
   useEffect(() => {
     (newCommentInput.length > 0) ? setEnable(true) : setEnable(false);
-    if ((commentsQuery.event === 'addCommentPanel' && commentsQuery.postId === props.id)) {
+    if (commentsQuery.event === 'addCommentPanel') {
       const json = JSON.parse(JSON.stringify(commentsQuery));
       delete json['event'];
-      setComments([...comments, json]);
       json.event = 'addComment';
+      setComments([...comments, json]);
       dispatch(newComment(json));
+    }
+    if (commentsQuery.event === 'deleteCommentPanel') {
+      console.warn("Comments deleteCommentPanel");
+      const commentsMap = [];
+      comments.map((comments) => (
+        (comments.id !== commentsQuery.id) && commentsMap.push(comments)
+      ))
+      setComments(commentsMap);
+      dispatch(deleteComment({postId: props.id, comments: [...commentsMap], event: 'deleteComment' }));
+      commentsMap.length===0 && setLocalEvent("hideComments");
+    }
+    if (commentsQuery.event === 'editCommentPanel') {
+      console.warn("Comments editCommentPanel");
+      const commentsMap = [];
+      comments.map((comments) => (commentsMap.push(comments)))
+      for (var j = 0; j < commentsMap.length; j++){
+        if (commentsMap[j].id === commentsQuery.id){
+          commentsMap[j] = {id: commentsQuery.id, username: user.name, date: commentsQuery.date, likes: commentsQuery.likes, dislikes: commentsQuery.dislikes, text: commentsQuery.text};
+        }
+      }
+      setComments(commentsMap);
+      dispatch(editComment({postId: props.id, comments: [...commentsMap], event: 'editComment' }));
+    }
+    if (commentsQuery.event === 'editCommentLikePanel' || commentsQuery.event === 'editCommentDislikePanel') {
+      console.warn("Comments editCommentLikeDislikePanel");
+      const commentsMap = [];
+      comments.map((comments) => (commentsMap.push(comments)))
+      for (var j = 0; j < commentsMap.length; j++){
+        if (commentsMap[j].id === commentsQuery.id){
+          commentsMap[j] = {id: commentsQuery.id, postId: commentsQuery.postId, username: user.name, date: commentsQuery.date, likes: commentsQuery.likes, dislikes: commentsQuery.dislikes, text: commentsQuery.text};
+        }
+      }
+      setComments(commentsMap);
+      dispatch(editComment({postId: props.id, comments: [...commentsMap], event: String(commentsQuery.event).slice(0, -5)}));
     }
     if (commentsQuery.event === 'hideComments') {
       setShowComments(false);
       dispatch(resetCommentsEvent);
     }
-  },[newCommentInput.length, props.id, commentsQuery, dispatch, comments]);
+  },[newCommentInput.length, user.name, props.id, props.postId, commentsQuery, dispatch, comments]);
 
 return (
     <>
@@ -89,8 +123,8 @@ return (
               {comments.map((comment) => (  
                 <div className="msg-container" key={JSON.stringify(comment.id)}>
                   <div className="msg">
-                  <div>{comment.username} {timeConverter(comment.date)}</div>
-                  <CommentPanel postId={props.id} id={comment.id} title={props.title} owner={comment.username} url={props.url} date={comment.date} comments={props.comments}/>
+                  <div>{comment.id} {comment.username} {timeConverter(comment.date)}</div>
+                  <CommentPanel postId={props.id} id={comment.id} likes={comment.likes} dislikes={comment.dislikes} title={props.title} owner={comment.username} url={props.url} date={comment.date} comments={props.comments} text={comment.text}/>
                   <div>{comment.text}</div>
                 </div>
                 </div>
@@ -99,7 +133,7 @@ return (
         </div>
           <Modal 
             onRequestClose={e => e.currentTarget === e.target && handleHideNewComment(e)} 
-            isOpen={localEvent !== "hide" && localEvent !== "showComments" && localEvent !== "hideComments" } 
+            isOpen={localEvent !== "hide" && localEvent !== "showComments" && localEvent !== "hideComments"} 
             className="modal"  
             appElement={document.getElementById('root') || undefined}>
           {(() => {

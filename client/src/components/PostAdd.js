@@ -1,4 +1,4 @@
-import "./NewPost.css";
+import "./PostAdd.css";
 import Upload from "./Upload";
 import { useState, Fragment } from 'react';
 import Modal from 'react-modal';

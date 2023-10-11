@@ -1,6 +1,6 @@
 import "./PostPanel.css";
 import  RedactPost  from './EditPost';
-import  RatePost  from './RatePost';
+import  PostRate  from './PostRate';
 import  Comments  from "./Comments";
 import { selectUser } from '../reducers/user';
 import { deletePost, selectPostQuery, editPost } from "../reducers/post";
@@ -42,14 +42,14 @@ const PostPanel = (props) => {
           <div>
             <button onClick={e => e.currentTarget === e.target && dispatch(hideCommentsEvent()) && setEvent("editPost")} title="Edit post">&#9997;</button>
             <button onClick={e => e.currentTarget === e.target && dispatch(hideCommentsEvent()) && setEvent("deletePost")} title="Delete post">&#128465;</button>
-            <RatePost id={props.id} title={props.title} likes={props.likes} dislikes={props.dislikes}/>
-            <Comments id={props.id} title={props.title} owner={props.owner} url={props.url} date={props.date} comments={props.comments}/>
+            <PostRate id={props.id} title={props.title} likes={props.likes} dislikes={props.dislikes}/>
+            <Comments id={props.id} postId={props.postId} title={props.title} owner={props.owner} url={props.url} date={props.date} comments={props.comments}/>
             <button title="Open picture in new tab" onClick={e => e.currentTarget === e.target && openInNewTab(props.url)}>&#128444;</button>
           </div>
           :
           <div>
-            <RatePost id={props.id} likes={props.likes} dislikes={props.dislikes}/>
-            <Comments id={props.id} title={props.title} owner={props.owner} url={props.url} date={props.date} comments={props.comments}/>
+            <PostRate id={props.id} likes={props.likes} dislikes={props.dislikes}/>
+            <Comments id={props.id} postId={props.postId} title={props.title} owner={props.owner} url={props.url} date={props.date} comments={props.comments}/>
             <button title="Open picture in new tab" onClick={e => e.currentTarget === e.target && openInNewTab(props.url)}>&#128444;</button></div>}
           <Modal onRequestClose={e => e.currentTarget === e.target && setEvent("hide")} isOpen={Event !== "hide"} className="panelModal"  appElement={document.getElementById('root') || undefined}>
           {(() => {

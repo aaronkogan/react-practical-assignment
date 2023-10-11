@@ -5,7 +5,7 @@ import Pagination from "./Pagination";
 import PostPanel from "./PostPanel";
 import { useState, useEffect } from 'react';
 import {  useSelector, useDispatch } from "react-redux";
-import {  selectPosts, getPosts, selectSearchQuery, selectPage, searchQuery, currentPage } from "../reducers/posts";
+import {  selectPosts, getPosts, selectSearchQuery, selectPage, searchQuery, currentPage, resetPosts } from "../reducers/posts";
 import { selectCommentsQuery, resetCommentsEvent, hideCommentsEvent } from "../reducers/comments";
 import { selectPostQuery, resetPostEvent } from "../reducers/post";
 import Modal from 'react-modal';
@@ -43,7 +43,9 @@ const Posts = () => {
     const fetchPosts = async (query) => {
       const res = await fetch(query, {method: 'GET', headers: {'Content-Type':'Authorization'}});
       const json = await res.json();
-      json.success && dispatch(currentPage(json.page)) && dispatch(getPosts(json));
+      json.success && setPagesCount(json.totalPages);
+      (pagesCount < currentPage) ? (dispatch(currentPage(pagesCount))) : (dispatch(currentPage(json.page))) 
+      dispatch(getPosts(json));
       console.warn("FetchPosts: "+ JSON.stringify(json));
       };
     switch (commentsQuery.event) {
@@ -51,20 +53,77 @@ const Posts = () => {
         console.warn("posts addComment: "+ JSON.stringify(commentsQuery));
         const request = JSON.parse(JSON.stringify(commentsQuery));
         delete request["event"];
+        console.warn("p###: "+ JSON.stringify(request));
         for (var j = 0; j < parsed?.length; j++){
           if (parsed[j].id === commentsQuery.postId){
             parsed[j] = {id: parsed[j].id, title: parsed[j].title, username: parsed[j].username, imageSrc: parsed[j].imageSrc, likes: parsed[j].likes, dislikes: parsed[j].dislikes, date: parsed[j].date, comments: [...parsed[j]?.comments, request]};
-            console.warn("QQ!!!!!!!!!!!!!!!: "+ JSON.stringify(parsed[j]));
             dispatch(resetCommentsEvent());
             dispatch(getPosts({result : parsed}));
-            setModalEvent({Event: "hide"});            
             break;
           }
         }
         break;
       }
+      case 'editComment': {
+        console.warn("posts editComment: "+ JSON.stringify(commentsQuery));
+        const request = JSON.parse(JSON.stringify(commentsQuery));
+        delete request["event"];
+        for (var j = 0; j < parsed?.length; j++){
+          if (parsed[j].id === commentsQuery.postId){
+            parsed[j] = {id: parsed[j].id, title: parsed[j].title, username: parsed[j].username, imageSrc: parsed[j].imageSrc, likes: parsed[j].likes, dislikes: parsed[j].dislikes, date: parsed[j].date, comments: [...request.comments]};
+            dispatch(resetCommentsEvent());
+            dispatch(getPosts({result : parsed}));
+            break;
+          }
+        }
+        break;
+      }
+      case 'editCommentLike': {
+        console.warn("posts editCommentLike: "+ JSON.stringify(commentsQuery));
+        const request = JSON.parse(JSON.stringify(commentsQuery));
+        delete request["event"];
+        for (var j = 0; j < parsed?.length; j++){
+          if (parsed[j].id === commentsQuery.postId){
+            parsed[j] = {id: parsed[j].id, title: parsed[j].title, username: parsed[j].username, imageSrc: parsed[j].imageSrc, likes: parsed[j].likes, dislikes: parsed[j].dislikes, date: parsed[j].date, comments: [...request.comments]};
+            dispatch(resetCommentsEvent());
+            dispatch(getPosts({result : parsed}));
+            break;
+          }
+        }
+        break;
+      }
+      case 'editCommentDislike': {
+        console.warn("posts editCommentDislike: "+ JSON.stringify(commentsQuery));
+        const request = JSON.parse(JSON.stringify(commentsQuery));
+        delete request["event"];
+        for (var j = 0; j < parsed?.length; j++){
+          if (parsed[j].id === commentsQuery.postId){
+            parsed[j] = {id: parsed[j].id, title: parsed[j].title, username: parsed[j].username, imageSrc: parsed[j].imageSrc, likes: parsed[j].likes, dislikes: parsed[j].dislikes, date: parsed[j].date, comments: [...request.comments]};
+            dispatch(resetCommentsEvent());
+            dispatch(getPosts({result : parsed}));
+            break;
+          }
+        }
+        break;
+      }
+      case 'deleteComment': {
+        console.warn("posts deleteComment: "+ JSON.stringify(commentsQuery));
+        for (var j = 0; j < parsed?.length; j++){
+          if (parsed[j].id === commentsQuery.postId){
+            parsed[j] = {id: parsed[j].id, title: parsed[j].title, username: parsed[j].username, imageSrc: parsed[j].imageSrc, likes: parsed[j].likes, dislikes: parsed[j].dislikes, date: parsed[j].date, comments: [...commentsQuery?.comments]};
+            console.warn("DISPATCH! deleteComment: "+ JSON.stringify(parsed[j]));
+            dispatch(resetCommentsEvent());
+            dispatch(getPosts({result : parsed}));
+            break;
+          }
+        }
+        break;        
+      }
       default: {
         console.warn("Posts Comments unregistered event DEBUG: "+ JSON.stringify(commentsQuery));
+        const request = JSON.parse(JSON.stringify(commentsQuery));
+        delete request["event"];
+
         break;
       }
     }
@@ -130,6 +189,7 @@ const Posts = () => {
           dispatch(searchQuery(""));
           document.getElementById('search').value="";
           dispatch(resetPostEvent());
+          dispatch(resetPosts());
           lastPageFetch(`http://localhost:8080/post/page/1`); 
         }
           setModalEvent({Event: "hide"});

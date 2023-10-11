@@ -34,22 +34,7 @@
     color: #666666;
   }
 
-.newPostModal {
-    display: flex;
-    flex-direction: column;
-    border-radius: 12px;
-    align-items: center;
-    justify-content: center;
-    margin-top: 5%;
-    font-family: 'Inter';
-    position: absolute;
-    top: 40%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color       : #b6bba0a2;      
-    }
-
-.NewPost>.cancel_button {
+  .NewPost>.cancel_button {
     margin-left: 10px; 
     margin-top: 10px; 
     margin-bottom: 10px; 
@@ -67,6 +52,21 @@
     background-color: #e41282;
     color: #ffffff;
 }
+
+.newPostModal {
+    display: flex;
+    flex-direction: column;
+    border-radius: 12px;
+    align-items: center;
+    justify-content: center;
+    margin-top: 5%;
+    font-family: 'Inter';
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color       : #b6bba0a2;      
+    }
 
 .newPostModal>input {
     position: relative;

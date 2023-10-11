@@ -4,7 +4,7 @@ import { hideCommentsEvent } from "../reducers/comments";
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 
-const RatePost = (props) => {
+const PostRate = (props) => {
     console.warn("Rate: "+ JSON.stringify(props));
     const dispatch = useDispatch();
     const user = useSelector(selectUser);
@@ -35,26 +35,26 @@ const RatePost = (props) => {
         (localEvent==="dislike") && postEditDislike(JSON.stringify({id: props.id, usename: user.name, title: props.title, likes: [...likes], dislikes: [...dislikes]}), props.id);
         setLocalEvent("default");
         },[likes, dislikes, dispatch, props.id, localEvent, user.name, props.title, postQuery]);
-        const isInArray = (list) => {
-            for (var j=0; j<list.length; j++) {
-                if (list[j] === user.name) return true;
-            }
-            return false;
+    const isInArray = (list) => {
+        for (var j=0; j<list.length; j++) {
+            if (list[j] === user.name) return true;
         }
-        const like = (e) => {
-            if ( dislikes.indexOf(user.name) > -1 ) {
-                dislikes.splice( dislikes.indexOf(user.name) , 1 )
-            }
-            setLikes([...likes, user.name]);
-            setLocalEvent("like");
-        };
-        const dislike  =(e) => {
-            if ( likes.indexOf(user.name) > -1 ) {
-                likes.splice( likes.indexOf(user.name) , 1 )
-            }
-            setDislikes([...dislikes, user.name]);
-            setLocalEvent("dislike");            
-        };
+        return false;
+    }
+    const like = (e) => {
+        if ( dislikes.indexOf(user.name) > -1 ) {
+            dislikes.splice( dislikes.indexOf(user.name) , 1 )
+        }
+        setLikes([...likes, user.name]);
+        setLocalEvent("like");
+    };
+    const dislike  =(e) => {
+        if ( likes.indexOf(user.name) > -1 ) {
+            likes.splice( likes.indexOf(user.name) , 1 )
+        }
+        setDislikes([...dislikes, user.name]);
+        setLocalEvent("dislike");            
+    };
 return (
     <>
     <button 
@@ -71,4 +71,4 @@ return (
 )
 }
 
-export default RatePost;
+export default PostRate;
