@@ -1,41 +1,40 @@
 #form-file-upload {
-    height: 50vh;
-    width: 50vw;
-    max-width: 600px;
-    max-height: 500px;
-    text-align: center;
-    position: relative;
-  }
-  
-  #input-file-upload {
-    display: none;
-  }
-  
-  #label-file-upload {
-    display: flex;
-    min-height: 100%;
-    align-items: center;
-    justify-content: center;
-    border-width: 2px;
-    border-radius: 1rem;
-    margin: 2%;
-    border-color: #cbd5e1;
-    background-color: #f8fafc;
-    background-position: center;
-    background-size: contain;
-    background-repeat: no-repeat;
-  }
-  
-  .upload-button {
-    cursor: pointer;
-    padding: 0.25rem;
-    font-size: 1rem;
-    border: none;
-    font-family: 'Oswald', sans-serif;
-    background-color: transparent;
-  }
-  
-  .upload-button:hover {
-    text-decoration-line: underline;
-  }
-  
+  height: 50vh;
+  width: 50vw;
+  max-width: 600px;
+  max-height: 500px;
+  text-align: center;
+  position: relative;
+}
+
+#input-file-upload {
+  display: none;
+}
+
+#label-file-upload {
+  display: flex;
+  min-height: 100%;
+  align-items: center;
+  justify-content: center;
+  border-width: 2px;
+  border-radius: 1rem;
+  margin: 0 2%;
+  border-color: #cbd5e1;
+  background-color: #f8fafc;
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.upload-button {
+  cursor: pointer;
+  padding: 0.25rem;
+  font-size: 1rem;
+  border: none;
+  font-family: 'Oswald', sans-serif;
+  background-color: transparent;
+}
+
+.upload-button:hover {
+  text-decoration-line: underline;
+}

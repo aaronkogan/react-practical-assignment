@@ -1,10 +1,10 @@
 const isTouchScreenDevice = () => {
-    try{
+    try {
         document.createEvent('TouchEvent');
         return true;
-    }catch(e){
+    } catch (e) {
         return false;
     }
-  }
+}
 
-  export default isTouchScreenDevice;
+export default isTouchScreenDevice;

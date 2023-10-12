@@ -5,14 +5,14 @@
     flex-direction: row;
     align-items: center;
     justify-content: right;
-    padding-right: 5%; 
+    padding-right: 5%;
     font-family: 'Inter';
 }
 
 .NewPost>button {
-    margin-left: 10px; 
-    margin-top: 10px; 
-    margin-bottom: 10px; 
+    margin-left: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
     border: 1px solid #280145;
     background-color: #026d2b;
     color: white;
@@ -21,23 +21,22 @@
     border-radius: 20px;
 }
 
-.NewPost>button:hover
-{
+.NewPost>button:hover {
     border: 1px solid #285603;
     background-color: #5ccc00;
     color: #ffffff;
 }
 
-.NewPost>button:disabled{
+.NewPost>button:disabled {
     border: 1px solid #999999;
     background-color: #cccccc;
     color: #666666;
-  }
+}
 
-  .NewPost>.cancel_button {
-    margin-left: 10px; 
-    margin-top: 10px; 
-    margin-bottom: 10px; 
+.NewPost>.cancel_button {
+    margin-left: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
     border: 1px solid #280145;
     background-color: #0b1baf;
     color: white;
@@ -46,8 +45,7 @@
     border-radius: 20px;
 }
 
-.NewPost>.cancel_button:hover
-{
+.NewPost>.cancel_button:hover {
     border: 1px solid #450306;
     background-color: #e41282;
     color: #ffffff;
@@ -65,8 +63,8 @@
     top: 40%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color       : #b6bba0a2;      
-    }
+    background-color: #b6bba0a2;
+}
 
 .newPostModal>input {
     position: relative;
@@ -89,55 +87,65 @@
 @media screen and (min-width: 1950px) {
     .NewPost {
         max-width: 86vw;
-        }
-  }
-  @media screen and (min-width: 2100px) {
+    }
+}
+
+@media screen and (min-width: 2100px) {
     .NewPost {
         max-width: 84vw;
-        }
-  }
-  @media screen and (min-width: 2250px) {
+    }
+}
+
+@media screen and (min-width: 2250px) {
     .NewPost {
         max-width: 82vw;
-        }
-  }
-  @media screen and (min-width: 2400px) {
+    }
+}
+
+@media screen and (min-width: 2400px) {
     .NewPost {
         max-width: 80vw;
-        }
-  }
-  @media screen and (min-width: 2550px) {
+    }
+}
+
+@media screen and (min-width: 2550px) {
     .NewPost {
         max-width: 78vw;
-        }
-  }
-  @media screen and (min-width: 2700px) {
+    }
+}
+
+@media screen and (min-width: 2700px) {
     .NewPost {
         max-width: 76vw;
-        }
-  }
-  @media screen and (min-width: 2850px) {
+    }
+}
+
+@media screen and (min-width: 2850px) {
     .NewPost {
         max-width: 74vw;
-        }
-  }
-  @media screen and (min-width: 3000px) {
+    }
+}
+
+@media screen and (min-width: 3000px) {
     .NewPost {
         max-width: 73vw;
-        }
-  }
-  @media screen and (min-width: 3150px) {
+    }
+}
+
+@media screen and (min-width: 3150px) {
     .NewPost {
         max-width: 72vw;
-        }
-  }
-  @media screen and (min-width: 3300px) {
+    }
+}
+
+@media screen and (min-width: 3300px) {
     .NewPost {
         max-width: 71vw;
-        }
-  }
-  @media screen and (min-width: 3450px) {
+    }
+}
+
+@media screen and (min-width: 3450px) {
     .NewPost {
         max-width: 70vw;
-        }
-  }
+    }
+}

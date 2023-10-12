@@ -9,15 +9,15 @@ class Index extends Component {
   render() {
     return (
       <CookiesProvider>
-      <Provider store={store}>
-      <App />
-      </Provider>
+        <Provider store={store}>
+          <App />
+        </Provider>
       </CookiesProvider>
     );
   }
 }
 
 ReactDOM.render(
-  <Index/>,
+  <Index />,
   document.getElementById('root'),
 );

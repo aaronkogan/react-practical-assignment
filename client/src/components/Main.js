@@ -7,7 +7,7 @@ import AddPost from './PostAdd';
 const Main = () => {
   return (
     <div>
-      <Header/><Search/><AddPost/><Posts/>
+      <Header /><Search /><AddPost /><Posts />
     </div>
   );
 };

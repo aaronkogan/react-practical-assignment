@@ -1,19 +1,22 @@
 .panelCommentsContainer {
-    position:static;
+    position: static;
     display: grid;
     flex-direction: row;
     justify-content: left;
     align-items: center;
     font-family: "Inter";
-    bottom : 10%;
+    bottom: 10%;
 }
+
 .panelComments {
 
     margin: 2px;
 }
+
 .panelComments>button {
-    font-size: 8px;
+    font-size: 10px;
 }
+
 .panelModal {
     display: flex;
     flex-direction: column;
@@ -26,68 +29,76 @@
     left: 50%;
     transform: translate(-50%, -50%);
     font-family: 'Inter';
-    background-color       : #b6bba0a2; 
+    background-color: #b6bba0a2;
 }
 
 .panelModal-deleteComment {
-    background-color       : #c3b398a2;  
-  }
+    background-color: #c3b398a2;
+}
 
 .panelModal-deleteComment>div {
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: center; 
+    justify-content: center;
 }
 
 .panelModal-editComment {
     display: flex;
     flex-direction: column;
-    border-radius: 12px;
     align-items: center;
-    justify-content: center;
-    font-family: 'Inter';
+    justify-content: right;
+    border-radius: 12px;
     position: absolute;
-    top: 40%;
+    padding: 10px;
+    top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color       : #b6bba0a2;    
+    font-family: 'Inter';
+    background-color: #b6bba0a2;
+}
+
+.panelModal-editComment-img {
+    display: flex;
+    overflow: auto;
+    width: 80vw;
+    height: 80vh;
+    object-fit: contain;
 }
 
 .panelModal-deleteComment {
-    background-color       : #c3b398a2;  
-  }
+    background-color: #c3b398a2;
+}
 
 .panelModal-deleteComment>div {
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: center; 
+    justify-content: center;
 }
 
 .delete-button {
-margin-left: 10px; 
-margin-top: 10px; 
-margin-bottom: 10px; 
-border: 1px solid #280145;
-background-color: #b53232;
-color: white;
-font-size: 14px;
-font-family: "Inter";
-border-radius: 20px;
+    margin-left: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #280145;
+    background-color: #b53232;
+    color: white;
+    font-size: 14px;
+    font-family: "Inter";
+    border-radius: 20px;
 }
 
-.delete-button:hover
-{
+.delete-button:hover {
     border: 1px solid #285603;
     background-color: #ef0b0b;
     color: #ffffff;
 }
 
 .cancel_button {
-    margin-left: 10px; 
-    margin-top: 10px; 
-    margin-bottom: 10px; 
+    margin-left: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
     border: 1px solid #280145;
     background-color: #454fab;
     color: white;

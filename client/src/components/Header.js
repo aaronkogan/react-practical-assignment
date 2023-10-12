@@ -7,31 +7,31 @@ import { resetPost } from "../reducers/post";
 import { resetComments } from "../reducers/comments";
 
 
-import { useCookies} from 'react-cookie';
+import { useCookies } from 'react-cookie';
 
 const Header = () => {
-const user = useSelector(selectUser);
-const [cookies, setCookie] = useCookies(['user']);
-useEffect(() => {
-  setCookie('user', user.name, {path: '/'});
-}, [setCookie, user.name]);
-const dispatch = useDispatch();
-const handleLogout = (e) => {
-  setCookie('user', '', {path: '/'})
-  e.preventDefault();
-  dispatch(resetPosts());
-  dispatch(resetPost());
-  dispatch(resetComments());
-  dispatch(logout());
-};
-return (
+  const user = useSelector(selectUser);
+  const [cookies, setCookie] = useCookies(['user']);
+  useEffect(() => {
+    setCookie('user', user.name, { path: '/' });
+  }, [setCookie, user.name]);
+  const dispatch = useDispatch();
+  const handleLogout = (e) => {
+    setCookie('user', '', { path: '/' })
+    e.preventDefault();
+    dispatch(resetPosts());
+    dispatch(resetPost());
+    dispatch(resetComments());
+    dispatch(logout());
+  };
+  return (
     <div className="logout">
-      <span className="user_name">{user.name}</span>
+      <span className="user_name">{cookies.user}</span>
       <button className="logout_button" aria-label="Log out" onClick={(e) => handleLogout(e)}>
         Log out
       </button>
     </div>
-);
+  );
 };
 
 export default Header;

@@ -1,26 +1,35 @@
 .login {
+    position: absolute;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    height: 100vh;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     align-items: center;
     font-family: "Inter";
 }
+
 .login_form {
     display: flex;
+    width: 80vw;
+    max-width: 300px;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
 }
+
 .login_form>h1 {
-    font-size: 35px;
-    margin-bottom: 15px;
-    padding-bottom: 10px;
-    letter-spacing: -1px;
+    font-size: 24px;
+    min-width: 100px;
+    align-items: center;
+    justify-content: center;
 }
+
 .login_form>input {
-    min-width: 380px;
-    padding: 20px 0;
-    padding-left: 15px;
+    width: 80%;
+    min-width: 100px;
+    padding: 10px;
     margin-bottom: 10px;
     outline: none;
     border: 1px solid rgba(0, 0, 0, 0.24);
@@ -28,28 +37,29 @@
     border-radius: 12px;
     font-size: 15px;
 }
+
 .submit_btn {
-    min-width: 380px;
-    padding: 20px 173px; 
-    margin-top: 10px; 
+    min-width: 120px;
+    padding: 10px;
     border: 1px solid #280145;
     background-color: #7400cc;
     color: white;
     font-size: 14px;
     font-family: "Inter";
     border-radius: 12px;
+    justify-content: center;
+    align-items: center;
 }
 
-.submit_btn:enabled:hover
-{
+.submit_btn:enabled:hover {
     border: 1px solid #285603;
     background-color: #5ccc00;
     color: #ffffff;
 }
 
 .submit_btn:disabled,
-  button[disabled]{
+button[disabled] {
     border: 1px solid #999999;
     background-color: #cccccc;
     color: #666666;
-  }
+}

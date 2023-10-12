@@ -12,24 +12,24 @@ const Login = () => {
     e.preventDefault();
     dispatch(login({ name: name }));
   };
-  (cookies["user"] !== "" && cookies["user"] !== undefined) && dispatch(login({ name: cookies["user"] }));      
+  (cookies["user"] !== "" && cookies["user"] !== undefined) && dispatch(login({ name: cookies["user"] }));
   const enabled = name.length > 0;
   return (
-      <div className="login">
-        <form className="login_form" onSubmit={(e) => handleSubmit(e)}>
-          <h1>Gallery WEB Application</h1>
-          <input
-            autoFocus
-            type="name" 
-            placeholder="Enter your name" 
-            value={name} 
-            onChange={(e) => setName(e.target.value)}
-          />
-          <button disabled={!enabled} type="Log In" className="submit_btn">
-            Continue
-          </button>
-        </form>
-      </div>
+    <div className="login">
+      <form className="login_form" onSubmit={(e) => handleSubmit(e)}>
+        <h1>Gallery WEB Application</h1>
+        <input
+          autoFocus
+          type="name"
+          placeholder="Enter your name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+        <button disabled={!enabled} defaultValue="" type="Log In" className="submit_btn">
+          Continue
+        </button>
+      </form>
+    </div>
   );
 };
 
