@@ -17,7 +17,7 @@ const usePageMeta = (title, description) => {
 
 function App() {
   const user = useSelector(selectUser);
-  return (usePageMeta("Web App Photo Gallery", "Practical assignment"), <div>{user ? <Main /> : <Login />}</div>)
+  return (usePageMeta("Web App Photo Gallery", "Practical assignment by Aaron Kogan"), <div>{user ? <Main /> : <Login />}</div>)
 }
 
 export default App;
