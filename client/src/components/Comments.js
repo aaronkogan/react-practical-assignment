@@ -122,7 +122,7 @@ const Comments = (props) => {
               <div className="msg">
                 <div>{comment.username} {timeConverter(comment.date)}</div>
                 <CommentPanel postId={props.id} id={comment.id} likes={comment.likes} dislikes={comment.dislikes} title={props.title} owner={comment.username} url={props.url} date={comment.date} comments={props.comments} text={comment.text} />
-                <div>{comment.text}</div>
+                <textarea className="msgText" readOnly>{comment.text}</textarea>
               </div>
             </div>
           ))}

@@ -128,7 +128,7 @@
 	background-image: -webkit-linear-gradient(top, #fdfdfd, #f3f3f4);
 	opacity: 0.9;
 	border-radius: 10px;
-	width: 20vw;
+	width: 25vw;
 	min-width: 125px;
 	height: 75px;
 	padding-right: 14%;
@@ -150,6 +150,12 @@
 	scrollbar-width: thin;
 	column-gap: 1rem;
 	column-count: 2;
+}
+.msgText {
+	border: none;
+    overflow: auto;
+    outline: none;
+	resize: none;
 }
 
 
