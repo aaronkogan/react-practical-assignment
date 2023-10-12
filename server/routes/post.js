@@ -6,7 +6,6 @@ const { upload } = require('../utils/fileUploader');
 const router = express.Router();
 const FindFiles = require('file-regex');
 const path = require('path');
-const { stdout } = require('process');
 
 router.get('/:id', postCtrl.getPost);
 

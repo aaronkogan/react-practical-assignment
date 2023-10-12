@@ -26,7 +26,8 @@ class Search extends Component {
   async lastPageFetch(query) {
     const res = await fetch(query, { method: 'GET', headers: { 'Content-Type': 'Authorization' } });
     const json = await res.json();
-    this.fetchPosts(`http://localhost:8080/post/page/${json.totalPages ? json.totalPages : 1}`);
+    json.totalPages <= 1 ? this.props.getPosts(json) : this.fetchPosts(`http://localhost:8080/post/page/${json.totalPages}`);
+    this.props.searchQuery(this.state.query);
   };
   onChange(query) {
     this.setState({ query });
