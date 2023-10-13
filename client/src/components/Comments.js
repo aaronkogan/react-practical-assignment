@@ -118,7 +118,7 @@ const Comments = (props) => {
       <div style={{ display: (showComments) ? "inline-block" : "none" }} className="wrapper">
         <div className="shape bubble">
           {comments.map((comment) => (
-            <div className="msg-container" key={JSON.stringify(comment.id)}>
+            <div className="msg-container wrapper " key={JSON.stringify(comment.id)}>
               <div className="msg">
                 <div>{comment.username} {timeConverter(comment.date)}</div>
                 <CommentPanel postId={props.id} id={comment.id} likes={comment.likes} dislikes={comment.dislikes} title={props.title} owner={comment.username} url={props.url} date={comment.date} comments={props.comments} text={comment.text} />

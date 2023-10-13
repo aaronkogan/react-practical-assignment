@@ -128,11 +128,13 @@
 	background-image: -webkit-linear-gradient(top, #fdfdfd, #f3f3f4);
 	opacity: 0.9;
 	border-radius: 10px;
-	width: 25vw;
-	min-width: 125px;
+	width: 100%;
+	min-width: 115px;
 	height: 75px;
 	padding-right: 14%;
-	margin-top: 4px;
+	margin-top: -60px;
+	margin-bottom: 65px;
+	margin-left: 50px;
 	overflow: auto;
 	word-break: keep-all;
 	white-space: nowrap;
