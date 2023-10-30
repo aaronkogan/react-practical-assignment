@@ -1,4 +1,5 @@
 import "./Comments.css";
+import  { addComment }  from "../services/Api";
 import CommentPanel from "./CommentPanel";
 import { selectUser } from "../reducers/user";
 import timeConverter from "../utils/TimeConverter";
@@ -16,9 +17,8 @@ const Comments = (props) => {
   const [comments, setComments] = useState([...props.comments]);
   const [showComments, setShowComments] = useState(false);
   const [localEvent, setLocalEvent] = useState("hide");
-  const addComment = async (query) => {
-    const res = await fetch('http://localhost:8080/comment', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: query });
-    const json = await res.json();
+  const postComment = async (query) => {
+    const json = await addComment(query);
     if (json.success) {
       json.result = { ...json.result, event: 'addCommentPanel' };
       dispatch(newComment(json.result));
@@ -36,7 +36,7 @@ const Comments = (props) => {
   };
   const handleNewComment = (e) => {
     setEnable(false);
-    addComment(JSON.stringify({ postId: props.id, username: user.name, text: newCommentInput }));
+    postComment(JSON.stringify({ postId: props.id, username: user.name, text: newCommentInput }));
     setNewCommentInput("");
     e.preventDefault();
   };
@@ -122,7 +122,7 @@ const Comments = (props) => {
               <div className="msg">
                 <div>{comment.username} {timeConverter(comment.date)}</div>
                 <CommentPanel postId={props.id} id={comment.id} likes={comment.likes} dislikes={comment.dislikes} title={props.title} owner={comment.username} url={props.url} date={comment.date} comments={props.comments} text={comment.text} />
-                <textarea className="msgText" readOnly>{comment.text}</textarea>
+                <textarea className="msgText" value={comment.text} readOnly />
               </div>
             </div>
           ))}

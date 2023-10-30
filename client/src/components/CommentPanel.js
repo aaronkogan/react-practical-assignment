@@ -1,4 +1,5 @@
 import "./CommentPanel.css";
+import  { delComment, fetchEditComment }  from "../services/Api";
 import { selectUser } from '../reducers/user';
 import { deleteComment, selectCommentsQuery, editComment, resetCommentsEvent } from "../reducers/comments";
 import { useDispatch, useSelector } from "react-redux";
@@ -36,15 +37,13 @@ const CommentPanel = (props) => {
   };
   useEffect(() => {
     const commentEditLike = async (query, id) => {
-      const res = await fetch(`http://localhost:8080/comment/${id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: query });
-      const json = await res.json();
+      const json = await fetchEditComment(id, query);
       json.success && (json.result = { ...json.result, event: 'editCommentLikeRate' });
       dispatch(editComment(json['result']));
       setLocalEvent("hide");
     }
     const commentEditDislike = async (query, id) => {
-      const res = await fetch(`http://localhost:8080/comment/${id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: query });
-      const json = await res.json();
+      const json = await fetchEditComment(id, query);
       json.success && (json.result = { ...json.result, event: 'editCommentDislikeRate' });
       dispatch(editComment(json['result']));
       setLocalEvent("hide");
@@ -72,18 +71,16 @@ const CommentPanel = (props) => {
     ((localEvent === "dislike") && commentEditDislike(JSON.stringify({ id: props.id, postId: props.postId, usename: props.owner, likes: [...likes], dislikes: [...dislikes] }), props.id)) && setLocalEvent("hide");
   }, [dispatch, commentsQuery, likes, dislikes, localEvent, props.id, props.title, props.postId,props.owner, props.commentsQuery]);
 
-  const delComment = async (query) => {
-    const res = await fetch(`http://localhost:8080/comment/${query}`, { method: 'DELETE', headers: { 'Content-Type': 'Authorization' } });
-    const json = await res.json();
+  const rmComment = async (id) => {
+    const json = await delComment(id);
     if (json.success) {
       json.result = { ...json.result, event: 'deleteCommentPanel' };
       dispatch(deleteComment(json.result));
       setLocalEvent("hide");
     }
   }
-  const fetchEditComment = async (query) => {
-    const res = await fetch(`http://localhost:8080/comment/${props.id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(query) });
-    const json = await res.json();
+  const commentEdit = async (query) => {
+    const json = await fetchEditComment(props.id, JSON.stringify(query));
     if (json.success) {
       json.result = { ...json.result, event: 'editCommentPanel' };
       dispatch(editComment(json.result));
@@ -112,7 +109,7 @@ const CommentPanel = (props) => {
               <div className={`panelModal-${localEvent}`}>
                 <div>You want to delete comment?</div><br />
                 <div>{props.text}</div>
-                <div><button onClick={e => e.currentTarget === e.target && delComment(props.id)} className="delete-button">Delete</button>
+                <div><button onClick={e => e.currentTarget === e.target && rmComment(props.id)} className="delete-button">Delete</button>
                   <button onClick={e => e.currentTarget === e.target && setLocalEvent("hide")} className="cancel_button">Cancel</button></div></div>
             )
           } else if (localEvent === "editComment") {
@@ -125,7 +122,7 @@ const CommentPanel = (props) => {
                   <img className="panelModal-editComment-img" alt={props.title} src={props.url}></img>
                   <textarea id="comment-input" onChange={(e) => setComment(e.target.value)} autoFocus defaultValue={comment} className="textarea" />
                   <div className="buttons_area">
-                    <button onClick={e => e.currentTarget === e.target && fetchEditComment({ postId: props.postId, username: user.name, text: comment })} disabled={!(comment !== props.text && comment !== '')} className="add_button" >Edit comment</button>
+                    <button onClick={e => e.currentTarget === e.target && commentEdit({ postId: props.postId, username: user.name, text: comment })} disabled={!(comment !== props.text && comment !== '')} className="add_button" >Edit comment</button>
                     <button onClick={e => e.currentTarget === e.target && setLocalEvent("hide")} className="cancel_button">Cancel</button>
                   </div>
                 </div>

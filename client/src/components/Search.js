@@ -1,4 +1,5 @@
 import "./Search.css";
+import  { fetchSearch, lastPageFetch }  from "../services/Api";
 import React, { Component } from 'react';
 import { connect } from "react-redux";
 import _ from 'lodash';
@@ -11,32 +12,21 @@ class Search extends Component {
     }
     this.searchValue = _.debounce(this.searchValue, 1000);
   }
-  async fetchSearch(query) {
-    const res = await fetch(query, { method: 'GET', headers: { 'Content-Type': 'Authorization' } });
-    const json = await res.json();
-    json.success && this.props.searchPosts(json) && this.props.searchQuery(this.state.query);
-  };
-  async fetchPosts(query) {
-    const res = await fetch(query, { method: 'GET', headers: { 'Content-Type': 'Authorization' } });
-    const json = await res.json();
-    json.success && this.props.getPosts(json);
-    this.props.searchQuery(this.state.query);
-    this.props.currentPage(json.totalPages);
-  };
-  async lastPageFetch(query) {
-    const res = await fetch(query, { method: 'GET', headers: { 'Content-Type': 'Authorization' } });
-    const json = await res.json();
-    json.totalPages <= 1 ? this.props.getPosts(json) : this.fetchPosts(`http://localhost:8080/post/page/${json.totalPages}`);
-    this.props.searchQuery(this.state.query);
-  };
   onChange(query) {
     this.setState({ query });
     this.searchValue(query);
   }
-  searchValue = (query) => {
+  searchValue = async (query) => {
     if (this.props.searchQuerySelect !== query) {
-      if (query === '') this.lastPageFetch('http://localhost:8080/post/page/1')
-      else if (!(query[0] === ('/') || query[0] === ('\\') || query[0] === ('%') || query === undefined)) this.fetchSearch('http://localhost:8080/post/search/' + query);
+      if (query === '') {
+        const json = await lastPageFetch();
+        json.success && this.props.getPosts(json);
+        this.props.currentPage(json.totalPages);
+        this.props.searchQuery(this.state.query);
+      } else if (!(query[0] === ('/') || query[0] === ('\\') || query[0] === ('%') || query === undefined)) {
+        const json = await fetchSearch(query);
+        json.success && this.props.searchPosts(json) && this.props.searchQuery(this.state.query);      
+      }
     }
   }
   render() {
@@ -59,7 +49,6 @@ class Search extends Component {
 const mapDispatchToProps = dispatch => ({
   searchPosts: (json) => (
     dispatch({ type: "posts/searchPosts", payload: json })
-
   ),
   searchQuery: (json) => (
     dispatch({ type: "posts/searchQuery", payload: json })

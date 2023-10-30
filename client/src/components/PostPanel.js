@@ -1,4 +1,5 @@
 import "./PostPanel.css";
+import  { postDelete }  from "../services/Api";
 import RedactPost from './EditPost';
 import PostRate from './PostRate';
 import Comments from "./Comments";
@@ -28,9 +29,8 @@ const PostPanel = (props) => {
     }
   }, [dispatch, postQuery, props.postQuery]);
 
-  const delPost = async (query) => {
-    const res = await fetch(`http://localhost:8080/post/${query}`, { method: 'DELETE', headers: { 'Content-Type': 'Authorization' } });
-    const json = await res.json();
+  const delPost = async (id) => {
+    const json = await postDelete(id);
     if (json.success) {
       json.result = { ...json.result, event: 'deletePost' };
       dispatch(deletePost(json.result));

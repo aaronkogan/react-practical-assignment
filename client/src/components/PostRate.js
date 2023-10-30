@@ -1,4 +1,5 @@
 import { selectUser } from '../reducers/user';
+import  { fetchEditPost }  from "../services/Api";
 import { editPost, selectPostQuery } from "../reducers/post";
 import { hideCommentsEvent } from "../reducers/comments";
 import { useState, useEffect } from 'react';
@@ -21,13 +22,11 @@ const PostRate = (props) => {
             setDislikes([...postQuery.dislikes]);
         }
         const postEditLike = async (query, id) => {
-            const res = await fetch(`http://localhost:8080/post/${id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: query });
-            const json = await res.json();
+            const json = await fetchEditPost(query, id);
             json.success && ((json.result = { ...json.result, event: 'editPostLikeRate' }) && dispatch(editPost(json.result))) && setLocalEvent("default");
         }
         const postEditDislike = async (query, id) => {
-            const res = await fetch(`http://localhost:8080/post/${id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: query });
-            const json = await res.json();
+            const json = await fetchEditPost(query, id);
             json.success && ((json.result = { ...json.result, event: 'editPostDislikeRate' }) && dispatch(editPost(json.result))) && setLocalEvent("default");
         }
         (localEvent === "like") && postEditLike(JSON.stringify({ id: props.id, usename: props.username, title: props.title, likes: [...likes], dislikes: [...dislikes] }), props.id);
@@ -40,14 +39,14 @@ const PostRate = (props) => {
         }
         return false;
     }
-    const like = (e) => {
+    const like = () => {
         if (dislikes.indexOf(user.name) > -1) {
             dislikes.splice(dislikes.indexOf(user.name), 1)
         }
         setLikes([...likes, user.name]);
         setLocalEvent("like");
     };
-    const dislike = (e) => {
+    const dislike = () => {
         if (likes.indexOf(user.name) > -1) {
             likes.splice(likes.indexOf(user.name), 1)
         }
@@ -57,12 +56,12 @@ const PostRate = (props) => {
     return (
         <>
             <button
-                onClick={(e) => like(e)}
+                onClick={like}
                 disabled={isInArray(likes)}
                 title="Like">&#128077;{(likes.length > 0 && likes[0] !== undefined) && <small style={{ color: "green" }}> {likes?.length}</small>}
             </button>
             <button
-                onClick={(e) => dislike(e)}
+                onClick={dislike}
                 disabled={isInArray(dislikes)}
                 title="Dislike">&#128078;{(dislikes.length > 0 && dislikes[0] !== undefined) && <small style={{ color: "red" }}> {dislikes?.length}</small>}
             </button>

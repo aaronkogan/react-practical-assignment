@@ -1,4 +1,5 @@
 import "./EditPost.css";
+import  { fetchEditPost, postImg }  from "../services/Api";
 import Upload from "./Upload";
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from "react-redux";
@@ -19,30 +20,25 @@ const RedactPost = (props) => {
   }, [title, props.title, imgPreload, pressed]);
   const postEdit = async (query, id) => {
     if (title !== props.title) {
-      const res = await fetch(`http://localhost:8080/post/${id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: query });
-      const json = await res.json();
+      const json = await fetchEditPost(query,id);
       json.success && (imgPreload !== 0) ?
-        postImg('http://localhost:8080/post/' + JSON.stringify(json.result.id) + '/picture', document.getElementById('input-file-upload').files[0])
+      sendImg(JSON.stringify(json.result.id))
         :
         ((json.result = { ...json.result, event: 'editPostPanel' }) && dispatch(editPost(json.result)));
     } else {
-      postImg('http://localhost:8080/post/' + JSON.stringify(props.id) + '/picture', document.getElementById('input-file-upload').files[0]);
+      sendImg(JSON.stringify(props.id));
     }
   };
-  const postImg = async (url, query) => {
-    const formData = new FormData();
-    formData.append("picture", query);
-    const res = await fetch(url, { method: 'POST', headers: { 'Accept': '/' }, body: formData });
-    const json = await res.json();
+  const sendImg = async (postId) => {
+    const json = await postImg(postId);
     if (json.success) {
       json.result = { ...json.result, event: 'editPostPanel' };
       dispatch(editPost(json.result));
     }
   };
-  const handleEditPost = (e) => {
+  const handleEditPost = () => {
     setEnable(false);
     setPressed(true);
-    e.preventDefault();
     postEdit(JSON.stringify({ title: title }), props.id);
   };
   return (
@@ -50,7 +46,7 @@ const RedactPost = (props) => {
       <input autoFocus name="input_title" placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)}></input>
       <Upload preload={true} url={props.url} />
       <div className="EditPost">
-        <button disabled={!enabled} onClick={(e) => handleEditPost(e)}>Edit post</button>
+        <button disabled={!enabled} onClick={handleEditPost}>Edit post</button>
         <button className="cancel_button" onClick={() => { dispatch(editPost({ event: "editPostPanelHide" })) }}>Cancel</button>
       </div>
     </div>

@@ -1,4 +1,5 @@
 import "./Posts.css";
+import  { lastPageFetch, fetchPosts }  from "../services/Api";
 import timeConverter from "../utils/TimeConverter";
 import isTouchScreenDevice from "../utils/TouchScreenDetect";
 import Pagination from "./Pagination";
@@ -34,15 +35,13 @@ const Posts = () => {
   const parseResult = [];
   const parsed = posts?.result?.map((obj) => obj);
   useEffect(() => {
-    const lastPageFetch = async (query) => {
-      const res = await fetch(query, { method: 'GET', headers: { 'Content-Type': 'Authorization' } });
-      const json = await res.json();
+    const getlastPage = async () => {
+      const json = await lastPageFetch();
       json.success && setPagesCount(json.totalPages);
-      (json.totalPages !== 0) ? ((json.totalPages !== 1) ? fetchPosts(`http://localhost:8080/post/page/${json.totalPages}`) : dispatch(currentPage(json.page)) && dispatch(getPosts(json))) : (dispatch(currentPage(1)));
+      dispatch(currentPage(json.page)) && dispatch(getPosts(json));
     };
-    const fetchPosts = async (query) => {
-      const res = await fetch(query, { method: 'GET', headers: { 'Content-Type': 'Authorization' } });
-      const json = await res.json();
+    const pagePosts = async (query) => {
+      const json = await fetchPosts(query);
       json.success && setPagesCount(json.totalPages);
       (pagesCount < currentPage) ? (dispatch(currentPage(pagesCount))) : (dispatch(currentPage(json.page)))
       dispatch(getPosts(json));
@@ -117,7 +116,7 @@ const Posts = () => {
     switch (postQuery.event) {
       case 'firstStart': {
         dispatch(resetPostEvent());
-        lastPageFetch('http://localhost:8080/post/page/1');
+        getlastPage();
         break;
       }
       case 'newPost': {
@@ -133,13 +132,13 @@ const Posts = () => {
             dispatch(searchQuery(""));
             document.getElementById('search').value = "";
             dispatch(resetPostEvent());
-            lastPageFetch(`http://localhost:8080/post/page/1`);
+            getlastPage();
           }
         } else {
           dispatch(searchQuery(""));
           document.getElementById('search').value = "";
           dispatch(resetPostEvent());
-          lastPageFetch(`http://localhost:8080/post/page/1`);
+          getlastPage();
         }
         break;
       }
@@ -162,19 +161,19 @@ const Posts = () => {
         if (parsed?.length > 1) {
           if (search === '') {
             dispatch(resetPostEvent());
-            fetchPosts(`http://localhost:8080/post/page/${page}`);
+            pagePosts(page);
           } else {
             dispatch(searchQuery(""));
             document.getElementById('search').value = "";
             dispatch(resetPostEvent());
-            lastPageFetch(`http://localhost:8080/post/page/1`);
+            getlastPage();
           }
         } else {
           dispatch(searchQuery(""));
           document.getElementById('search').value = "";
           dispatch(resetPostEvent());
           dispatch(resetPosts());
-          lastPageFetch(`http://localhost:8080/post/page/1`);
+          getlastPage();
         }
         setModalEvent({ Event: "hide" });
         break;

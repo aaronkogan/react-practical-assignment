@@ -16,9 +16,8 @@ const Header = () => {
     setCookie('user', user.name, { path: '/' });
   }, [setCookie, user.name]);
   const dispatch = useDispatch();
-  const handleLogout = (e) => {
+  const handleLogout = () => {
     setCookie('user', '', { path: '/' })
-    e.preventDefault();
     dispatch(resetPosts());
     dispatch(resetPost());
     dispatch(resetComments());
@@ -27,7 +26,7 @@ const Header = () => {
   return (
     <div className="logout">
       <span className="user_name">{cookies.user}</span>
-      <button className="logout_button" aria-label="Log out" onClick={(e) => handleLogout(e)}>
+      <button className="logout_button" aria-label="Log out" onClick={handleLogout}>
         Log out
       </button>
     </div>
