@@ -17,6 +17,14 @@
     font-size: 10px;
 }
 
+.like {
+    color: green;
+}
+
+.dislike {
+    color: red;
+}
+
 .panelModal {
     display: flex;
     flex-direction: column;

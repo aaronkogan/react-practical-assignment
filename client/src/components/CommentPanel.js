@@ -1,53 +1,15 @@
-import "./CommentPanel.css";
-import  { delComment, fetchEditComment }  from "../services/Api";
-import { selectUser } from '../reducers/user';
-import { deleteComment, selectCommentsQuery, editComment, resetCommentsEvent } from "../reducers/comments";
+import  CommentPanelContainer  from './CommentPanelContainer'
+
+import { selectCommentsQuery, editComment } from "../reducers/comments";
 import { useDispatch, useSelector } from "react-redux";
 import { useState, useEffect } from 'react';
-import Modal from 'react-modal';
 
 const CommentPanel = (props) => {
   const dispatch = useDispatch();
-  const user = useSelector(selectUser);
   const commentsQuery = useSelector(selectCommentsQuery);
-  const [localEvent, setLocalEvent] = useState("hide");
-  const [comment, setComment] = useState(props.text);
   const [likes, setLikes] = useState([...props?.likes]);
   const [dislikes, setDislikes] = useState([...props?.dislikes]);
-  const isOwner = (user.name === props.owner);
-  const isInArray = (list) => {
-    for (var j = 0; j < list.length; j++) {
-      if (list[j] === user.name) return true;
-    }
-    return false;
-  };
-  const like = () => {
-    if (dislikes.indexOf(user.name) > -1) {
-      dislikes.splice(dislikes.indexOf(user.name), 1)
-    }
-    setLikes([...likes, user.name]);
-    setLocalEvent("like");
-  };
-  const dislike = () => {
-    if (likes.indexOf(user.name) > -1) {
-      likes.splice(likes.indexOf(user.name), 1)
-    }
-    setDislikes([...dislikes, user.name]);
-    setLocalEvent("dislike");
-  };
   useEffect(() => {
-    const commentEditLike = async (query, id) => {
-      const json = await fetchEditComment(id, query);
-      json.success && (json.result = { ...json.result, event: 'editCommentLikeRate' });
-      dispatch(editComment(json['result']));
-      setLocalEvent("hide");
-    }
-    const commentEditDislike = async (query, id) => {
-      const json = await fetchEditComment(id, query);
-      json.success && (json.result = { ...json.result, event: 'editCommentDislikeRate' });
-      dispatch(editComment(json['result']));
-      setLocalEvent("hide");
-    }
     if ((commentsQuery.event === 'editCommentDislikeRate' && commentsQuery.id === props.id) || (commentsQuery.event === 'editCommentLikeRate' && commentsQuery.id === props.id)) {
       const json = JSON.parse(JSON.stringify(commentsQuery));
       delete json['event'];
@@ -56,82 +18,7 @@ const CommentPanel = (props) => {
       setLikes([...commentsQuery.likes]);
       setDislikes([...commentsQuery.dislikes]);
     }
-    if (commentsQuery.event === 'deleteCommentPanel' && commentsQuery.id === props.id) {
-      const json = JSON.parse(JSON.stringify(commentsQuery));
-      delete json['event'];
-      json.event = 'deleteComment';
-      dispatch(deleteComment(json));
-      setLocalEvent("hide");
-    }
-    if (commentsQuery.event === 'editCommentPanelHide') {
-      dispatch(resetCommentsEvent());
-      setLocalEvent("hide");
-    }
-    ((localEvent === "like") && commentEditLike(JSON.stringify({ id: props.id, postId: props.postId, username: props.owner, likes: [...likes], dislikes: [...dislikes] }), props.id)) && setLocalEvent("hide");
-    ((localEvent === "dislike") && commentEditDislike(JSON.stringify({ id: props.id, postId: props.postId, usename: props.owner, likes: [...likes], dislikes: [...dislikes] }), props.id)) && setLocalEvent("hide");
-  }, [dispatch, commentsQuery, likes, dislikes, localEvent, props.id, props.title, props.postId,props.owner, props.commentsQuery]);
-
-  const rmComment = async (id) => {
-    const json = await delComment(id);
-    if (json.success) {
-      json.result = { ...json.result, event: 'deleteCommentPanel' };
-      dispatch(deleteComment(json.result));
-      setLocalEvent("hide");
-    }
-  }
-  const commentEdit = async (query) => {
-    const json = await fetchEditComment(props.id, JSON.stringify(query));
-    if (json.success) {
-      json.result = { ...json.result, event: 'editCommentPanel' };
-      dispatch(editComment(json.result));
-      setLocalEvent("hide");
-    }
-  }
-  return (
-    <div className="panelCommentsContainer">{isOwner ?
-      <div className="panelComments">
-        <button onClick={e => e.currentTarget === e.target && setLocalEvent("editComment")} title="Edit comment">&#9997;</button>
-        <button onClick={e => e.currentTarget === e.target && setLocalEvent("deleteComment")} title="Delete comment">&#128465;</button>
-        <button onClick={e => e.currentTarget === e.target && like()} disabled={isInArray(likes)} title="Like">&#128077;{(likes.length > 0 && likes[0] !== undefined) && <small style={{ color: "green" }}> {likes?.length}</small>}</button>
-        <button onClick={e => e.currentTarget === e.target && dislike()} disabled={isInArray(dislikes)} title="Dislike">&#128078;{(dislikes.length > 0 && dislikes[0] !== undefined) && <small style={{ color: "red" }}> {dislikes?.length}</small>}</button>
-      </div>
-      :
-      <div className="panelComments">
-        <button onClick={e => e.currentTarget === e.target && like()} disabled={isInArray(likes)} title="Like">&#128077;{(likes.length > 0 && likes[0] !== undefined) && <small style={{ color: "green" }}> {likes?.length}</small>}</button>
-        <button onClick={e => e.currentTarget === e.target && dislike()} disabled={isInArray(dislikes)} title="Dislike">&#128078;{(dislikes.length > 0 && dislikes[0] !== undefined) && <small style={{ color: "red" }}> {dislikes?.length}</small>}</button>
-      </div>
-    }
-
-      <Modal onRequestClose={e => e.currentTarget === e.target && setLocalEvent("hide")} isOpen={localEvent !== "hide"} className="panelModal" appElement={document.getElementById('root') || undefined}>
-        {(() => {
-          if (localEvent === "deleteComment") {
-            return (
-              <div className={`panelModal-${localEvent}`}>
-                <div>You want to delete comment?</div><br />
-                <div>{props.text}</div>
-                <div><button onClick={e => e.currentTarget === e.target && rmComment(props.id)} className="delete-button">Delete</button>
-                  <button onClick={e => e.currentTarget === e.target && setLocalEvent("hide")} className="cancel_button">Cancel</button></div></div>
-            )
-          } else if (localEvent === "editComment") {
-            return (
-              <div className={`panelModal-${localEvent}`}>
-                <div>
-                  <div>Edit comment on post</div>
-                  {props.date}
-                  <div>{props.title} by {props.owner}</div>
-                  <img className="panelModal-editComment-img" alt={props.title} src={props.url}></img>
-                  <textarea id="comment-input" onChange={(e) => setComment(e.target.value)} autoFocus defaultValue={comment} className="textarea" />
-                  <div className="buttons_area">
-                    <button onClick={e => e.currentTarget === e.target && commentEdit({ postId: props.postId, username: user.name, text: comment })} disabled={!(comment !== props.text && comment !== '')} className="add_button" >Edit comment</button>
-                    <button onClick={e => e.currentTarget === e.target && setLocalEvent("hide")} className="cancel_button">Cancel</button>
-                  </div>
-                </div>
-              </div>
-            )
-          }
-        })()}
-      </ Modal>
-    </div>
-  )
+  }, [commentsQuery, dispatch, props.id]);
+  return (<CommentPanelContainer comments={props.comments} owner={props.owner} text={props.text} likes={likes} dislikes={dislikes} postId={props.postId} id={props.id} url={props.url}/>)
 }
 export default CommentPanel;

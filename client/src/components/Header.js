@@ -1,5 +1,5 @@
 import "./Header.css";
-import { useEffect } from "react";
+import { useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { logout, selectUser } from "../reducers/user";
 import { resetPosts } from "../reducers/posts";
@@ -12,17 +12,16 @@ import { useCookies } from 'react-cookie';
 const Header = () => {
   const user = useSelector(selectUser);
   const [cookies, setCookie] = useCookies(['user']);
+  const dispatch = useDispatch();
   useEffect(() => {
     setCookie('user', user.name, { path: '/' });
   }, [setCookie, user.name]);
-  const dispatch = useDispatch();
-  const handleLogout = () => {
+  const handleLogout = useCallback(() => {
     setCookie('user', '', { path: '/' })
     dispatch(resetPosts());
     dispatch(resetPost());
     dispatch(resetComments());
-    dispatch(logout());
-  };
+    dispatch(logout())}, [dispatch, setCookie]);
   return (
     <div className="logout">
       <span className="user_name">{cookies.user}</span>

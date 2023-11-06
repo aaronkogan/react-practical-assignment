@@ -54,8 +54,7 @@ const Posts = () => {
         for (j = 0; j < parsed?.length; j++) {
           if (parsed[j].id === commentsQuery.postId) {
             parsed[j] = { id: parsed[j].id, title: parsed[j].title, username: parsed[j].username, imageSrc: parsed[j].imageSrc, likes: parsed[j].likes, dislikes: parsed[j].dislikes, date: parsed[j].date, comments: [...parsed[j].comments, request] };
-            dispatch(resetCommentsEvent());
-            dispatch(getPosts({ result: parsed }));
+            dispatch(resetCommentsEvent()) && dispatch(getPosts({ result: parsed }));
             break;
           }
         }
@@ -67,8 +66,7 @@ const Posts = () => {
         for (j = 0; j < parsed?.length; j++) {
           if (parsed[j].id === commentsQuery.postId) {
             parsed[j] = { id: parsed[j].id, title: parsed[j].title, username: parsed[j].username, imageSrc: parsed[j].imageSrc, likes: parsed[j].likes, dislikes: parsed[j].dislikes, date: parsed[j].date, comments: [...request.comments] };
-            dispatch(resetCommentsEvent());
-            dispatch(getPosts({ result: parsed }));
+            dispatch(resetCommentsEvent()) && dispatch(getPosts({ result: parsed }));
             break;
           }
         }
@@ -80,8 +78,7 @@ const Posts = () => {
         for (j = 0; j < parsed?.length; j++) {
           if (parsed[j].id === commentsQuery.postId) {
             parsed[j] = { id: commentsQuery.postId, title: parsed[j].title, username: parsed[j].username, imageSrc: parsed[j].imageSrc, likes: parsed[j].likes, dislikes: parsed[j].dislikes, date: parsed[j].date, comments: [...request.comments] };
-            dispatch(resetCommentsEvent());
-            dispatch(getPosts({ result: parsed }));
+            dispatch(resetCommentsEvent()) && dispatch(getPosts({ result: parsed }));
             break;
           }
         }
@@ -93,8 +90,7 @@ const Posts = () => {
         for (j = 0; j < parsed.length; j++) {
           if (parsed[j].id === commentsQuery.postId) {
             parsed[j] = { id: commentsQuery.postId, title: parsed[j].title, username: parsed[j].username, imageSrc: parsed[j].imageSrc, likes: parsed[j].likes, dislikes: parsed[j].dislikes, date: parsed[j].date, comments: [...request.comments] };
-            dispatch(resetCommentsEvent());
-            dispatch(getPosts({ result: parsed }));
+            dispatch(resetCommentsEvent()) && dispatch(getPosts({ result: parsed }));
             break;
           }
         }
@@ -104,8 +100,7 @@ const Posts = () => {
         for (j = 0; j < parsed?.length; j++) {
           if (parsed[j].id === commentsQuery.postId) {
             parsed[j] = { id: commentsQuery.postId, title: parsed[j].title, username: parsed[j].username, imageSrc: parsed[j].imageSrc, likes: parsed[j].likes, dislikes: parsed[j].dislikes, date: parsed[j].date, comments: [...commentsQuery?.comments] };
-            dispatch(resetCommentsEvent());
-            dispatch(getPosts({ result: parsed }));
+            dispatch(resetCommentsEvent()) && dispatch(getPosts({ result: parsed }));
             break;
           }
         }
@@ -125,20 +120,12 @@ const Posts = () => {
         if (parsed?.length < 9) {
           parsed?.push(request);
           if (search === '') {
-            dispatch(resetPostEvent());
-            dispatch(currentPage(pagesCount));
-            dispatch(getPosts({ result: parsed }));
+            dispatch(resetPostEvent()) && dispatch(currentPage(pagesCount)) && dispatch(getPosts({ result: parsed }));
           } else {
-            dispatch(searchQuery(""));
-            document.getElementById('search').value = "";
-            dispatch(resetPostEvent());
-            getlastPage();
+            (document.getElementById('search').value = "") && dispatch(searchQuery("")) && dispatch(resetPostEvent()) && getlastPage();
           }
         } else {
-          dispatch(searchQuery(""));
-          document.getElementById('search').value = "";
-          dispatch(resetPostEvent());
-          getlastPage();
+          (document.getElementById('search').value = "") && dispatch(searchQuery("")) && dispatch(resetPostEvent()) && getlastPage();
         }
         break;
       }
@@ -149,9 +136,7 @@ const Posts = () => {
           if (parsed[j].id === postQuery.id) {
             request.comments = parsed[j].comments;
             parsed[j] = request;
-            dispatch(resetPostEvent());
-            dispatch(getPosts({ result: parsed }));
-            setModalEvent({ Event: "hide" });
+            dispatch(resetPostEvent()) && dispatch(getPosts({ result: parsed })) && setModalEvent({ Event: "hide" });
             break;
           }
         }
@@ -159,21 +144,11 @@ const Posts = () => {
       }
       case 'deletePost': {
         if (parsed?.length > 1) {
-          if (search === '') {
-            dispatch(resetPostEvent());
-            pagePosts(page);
-          } else {
-            dispatch(searchQuery(""));
-            document.getElementById('search').value = "";
-            dispatch(resetPostEvent());
-            getlastPage();
+          if (search === '') { dispatch(resetPostEvent()) && pagePosts(page) } else {
+            (document.getElementById('search').value = "") && dispatch(searchQuery("")) && dispatch(resetPostEvent()) && getlastPage();
           }
         } else {
-          dispatch(searchQuery(""));
-          document.getElementById('search').value = "";
-          dispatch(resetPostEvent());
-          dispatch(resetPosts());
-          getlastPage();
+          (document.getElementById('search').value = "") && dispatch(searchQuery("")) && dispatch(resetPostEvent()) && dispatch(resetPosts()) && getlastPage();
         }
         setModalEvent({ Event: "hide" });
         break;
@@ -185,8 +160,7 @@ const Posts = () => {
           if (parsed[j].id === postQuery.id) {
             request.comments = parsed[j].comments;
             parsed[j] = request;
-            dispatch(resetPostEvent());
-            dispatch(getPosts({ result: parsed }));
+            dispatch(resetPostEvent()) && dispatch(getPosts({ result: parsed }));
             break;
           }
         }
@@ -199,8 +173,7 @@ const Posts = () => {
           if (parsed[j].id === postQuery.id) {
             request.comments = parsed[j].comments;
             parsed[j] = request;
-            dispatch(resetPostEvent());
-            dispatch(getPosts({ result: parsed }));
+            dispatch(resetPostEvent()) && dispatch(getPosts({ result: parsed }));
             break;
           }
         }
@@ -232,7 +205,7 @@ const Posts = () => {
                 <div
                   onClick={e => e.currentTarget === e.target &&
                     setModalIsOpenToTrue(post[0], "fullscreen", ({ title: post[1], owner: post[2], url: post[3], likes: post[4], dislikes: post[5], date: post[6], comments: post[7] }))}>{post[6]}<br />{post[1]} by {post[2]}</div>
-                <div style={{ paddingLeft: "-25%", justifyContent: "center", position: "center", display: "flex", flexDirection: "row" }}>
+                <div className="post-panel">
                   <PostPanel id={post[0]} title={post[1]} owner={post[2]} url={post[3]} likes={post[4]} dislikes={post[5]} date={post[6]} comments={post[7]} />
                 </div>
               </div>}
@@ -240,7 +213,7 @@ const Posts = () => {
 
         ))}
         <div className="posts-item">
-          <footer style={{ justifyContent: "center", display: "flex", flexDirection: "row" }}><Pagination pagesCount={pagesCount} /></footer>
+          <footer><Pagination pagesCount={pagesCount} /></footer>
         </div>
       </div>
       <Modal onRequestClose={setModalIsOpenToFalse} isOpen={modalEvent.Event !== "hide"} className={`main-modal-${modalEvent.Event}`} appElement={document.getElementById('root') || undefined}>

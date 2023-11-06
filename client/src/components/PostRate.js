@@ -1,3 +1,4 @@
+import "./PostRate.css";
 import { selectUser } from '../reducers/user';
 import  { fetchEditPost }  from "../services/Api";
 import { editPost, selectPostQuery } from "../reducers/post";
@@ -58,12 +59,12 @@ const PostRate = (props) => {
             <button
                 onClick={like}
                 disabled={isInArray(likes)}
-                title="Like">&#128077;{(likes.length > 0 && likes[0] !== undefined) && <small style={{ color: "green" }}> {likes?.length}</small>}
+                title="Like">&#128077;{(likes.length > 0 && likes[0] !== undefined) && <small className='like'> {likes?.length}</small>}
             </button>
             <button
                 onClick={dislike}
                 disabled={isInArray(dislikes)}
-                title="Dislike">&#128078;{(dislikes.length > 0 && dislikes[0] !== undefined) && <small style={{ color: "red" }}> {dislikes?.length}</small>}
+                title="Dislike">&#128078;{(dislikes.length > 0 && dislikes[0] !== undefined) && <small className='dislike'> {dislikes?.length}</small>}
             </button>
         </>
     )

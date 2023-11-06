@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useDispatch } from "react-redux";
 import "./Login.css";
 import { login } from "../reducers/user";
@@ -8,15 +8,16 @@ const Login = () => {
   const dispatch = useDispatch();
   const [name, setName] = useState("");
   const [cookies] = useCookies(['user']);
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = useCallback(() => {
     dispatch(login({ name: name }));
-  };
-  (cookies["user"] !== "" && cookies["user"] !== undefined) && dispatch(login({ name: cookies["user"] }));
+  }, [dispatch, name]);
+  useEffect(() => {
+    (cookies["user"] !== "" && cookies["user"] !== undefined) && dispatch(login({ name: cookies["user"] }));
+  }, [cookies, dispatch]);
   const enabled = name.length > 0;
   return (
     <div className="login">
-      <form className="login_form" onSubmit={(e) => handleSubmit(e)}>
+      <form className="login_form" onSubmit={handleSubmit}>
         <h1>Gallery WEB Application</h1>
         <input
           autoFocus

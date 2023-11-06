@@ -1,6 +1,6 @@
 import "./Upload.css";
 import { preloadPostImg } from "../reducers/post";
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useDispatch } from "react-redux";
 
 const Upload = (props) => {
@@ -14,15 +14,16 @@ const Upload = (props) => {
     images.forEach(image => newImageURLs.push(URL.createObjectURL(image)));
     setImageURLs(newImageURLs);
   }, [images]);
-  const handleChange = function (e) {
+  const handleChange  = useCallback((e) => {
     setPreload(false);
     e.preventDefault();
     setImages([...e.target.files]);
     dispatch(preloadPostImg(e.target.files.length));
-  };
-  const onButtonUploadClick = () => {
+  }, [dispatch]);
+  const onButtonUploadClick  = useCallback(() => {
     inputRef.current.click();
-  };
+  }, []);
+
   return (
     <React.Fragment>
       <form
@@ -34,7 +35,7 @@ const Upload = (props) => {
           id="input-file-upload"
           accept="image/*"
           multiple={false}
-          onChange={handleChange} />
+          onChange={e => handleChange(e)} />
         <label
           style={(preload) ? { backgroundImage: `url(${props.url})` } : (images[0]) && { backgroundImage: `url(${imagesURLs[0]})` }}
           id="label-file-upload"
