@@ -3,7 +3,7 @@ import { selectUser } from '../reducers/user';
 import  { fetchEditPost }  from "../services/Api";
 import { editPost, selectPostQuery } from "../reducers/post";
 import { hideCommentsEvent } from "../reducers/comments";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 
 const PostRate = (props) => {
@@ -34,26 +34,26 @@ const PostRate = (props) => {
         (localEvent === "dislike") && postEditDislike(JSON.stringify({ id: props.id, usename: props.username, title: props.title, likes: [...likes], dislikes: [...dislikes] }), props.id);
         setLocalEvent("default");
     }, [likes, dislikes, dispatch, props.id, props.title, localEvent, props.username, postQuery]);
-    const isInArray = (list) => {
+    const isInArray = useCallback((list) => {
         for (var j = 0; j < list.length; j++) {
             if (list[j] === user.name) return true;
         }
         return false;
-    }
-    const like = () => {
+    },[user.name]);
+    const like = useCallback(() => {
         if (dislikes.indexOf(user.name) > -1) {
             dislikes.splice(dislikes.indexOf(user.name), 1)
         }
         setLikes([...likes, user.name]);
         setLocalEvent("like");
-    };
-    const dislike = () => {
+    },[dislikes, likes, user.name]);
+    const dislike = useCallback(() => {
         if (likes.indexOf(user.name) > -1) {
             likes.splice(likes.indexOf(user.name), 1)
         }
         setDislikes([...dislikes, user.name]);
         setLocalEvent("dislike");
-    };
+    },[dislikes, likes, user.name]);
     return (
         <>
             <button

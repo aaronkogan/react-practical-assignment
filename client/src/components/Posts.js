@@ -4,7 +4,7 @@ import timeConverter from "../utils/TimeConverter";
 import isTouchScreenDevice from "../utils/TouchScreenDetect";
 import Pagination from "./Pagination";
 import PostPanel from "./PostPanel";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useSelector, useDispatch } from "react-redux";
 import { selectPosts, getPosts, selectSearchQuery, selectPage, searchQuery, currentPage, resetPosts } from "../reducers/posts";
 import { selectCommentsQuery, resetCommentsEvent, hideCommentsEvent } from "../reducers/comments";
@@ -25,13 +25,6 @@ const Posts = () => {
     Event: "hide",
     payload: {}
   });
-  const setModalIsOpenToTrue = (itemId, e, p) => {
-    dispatch(hideCommentsEvent());
-    setModalEvent({ id: itemId, Event: e, payload: p });
-  };
-  const setModalIsOpenToFalse = () => {
-    setModalEvent({ id: 0, Event: "hide", payload: {} });
-  };
   const parseResult = [];
   const parsed = posts?.result?.map((obj) => obj);
   useEffect(() => {
@@ -122,10 +115,16 @@ const Posts = () => {
           if (search === '') {
             dispatch(resetPostEvent()) && dispatch(currentPage(pagesCount)) && dispatch(getPosts({ result: parsed }));
           } else {
-            (document.getElementById('search').value = "") && dispatch(searchQuery("")) && dispatch(resetPostEvent()) && getlastPage();
+            document.getElementById('search').value = "";
+            dispatch(searchQuery(""));
+            dispatch(resetPostEvent());
+            getlastPage();
           }
         } else {
-          (document.getElementById('search').value = "") && dispatch(searchQuery("")) && dispatch(resetPostEvent()) && getlastPage();
+          document.getElementById('search').value = "";
+          dispatch(searchQuery(""));
+          dispatch(resetPostEvent());
+          getlastPage();
         }
         break;
       }
@@ -145,10 +144,17 @@ const Posts = () => {
       case 'deletePost': {
         if (parsed?.length > 1) {
           if (search === '') { dispatch(resetPostEvent()) && pagePosts(page) } else {
-            (document.getElementById('search').value = "") && dispatch(searchQuery("")) && dispatch(resetPostEvent()) && getlastPage();
+            document.getElementById('search').value = "";
+            dispatch(searchQuery(""));
+            dispatch(resetPostEvent());
+            getlastPage();
           }
         } else {
-          (document.getElementById('search').value = "") && dispatch(searchQuery("")) && dispatch(resetPostEvent()) && dispatch(resetPosts()) && getlastPage();
+          document.getElementById('search').value = "";
+          dispatch(searchQuery(""));
+          dispatch(resetPostEvent());
+          dispatch(resetPosts());
+          getlastPage();
         }
         setModalEvent({ Event: "hide" });
         break;
@@ -182,6 +188,13 @@ const Posts = () => {
       default: break;
     }
   }, [postQuery, commentsQuery, dispatch, parsed, search, page, pagesCount]);
+  const setModalIsOpenToTrue = useCallback((itemId, e, p) => {
+    dispatch(hideCommentsEvent());
+    setModalEvent({ id: itemId, Event: e, payload: p });
+  },[dispatch]);
+  const setModalIsOpenToFalse = useCallback(() => {
+    setModalEvent({ id: 0, Event: "hide", payload: {} });
+  },[]);
   if (parsed) {
     for (var i = 0; i < parsed.length; i++) {
       if (parsed[i] !== '') {
@@ -205,7 +218,7 @@ const Posts = () => {
                 <div
                   onClick={e => e.currentTarget === e.target &&
                     setModalIsOpenToTrue(post[0], "fullscreen", ({ title: post[1], owner: post[2], url: post[3], likes: post[4], dislikes: post[5], date: post[6], comments: post[7] }))}>{post[6]}<br />{post[1]} by {post[2]}</div>
-                <div className="post-panel">
+                <div className="posts-panel">
                   <PostPanel id={post[0]} title={post[1]} owner={post[2]} url={post[3]} likes={post[4]} dislikes={post[5]} date={post[6]} comments={post[7]} />
                 </div>
               </div>}
@@ -224,7 +237,7 @@ const Posts = () => {
                 {modalEvent.payload.date} <br />
                 {modalEvent.payload.title} by {modalEvent.payload.owner}
                 <img onClick={e => e.currentTarget === e.target && setModalIsOpenToFalse} alt={modalEvent.payload.title} className={`main-modal-${modalEvent.Event}-img`} src={modalEvent.payload.url}></img>
-                <div className="posts-panel"><PostPanel id={modalEvent.id} title={modalEvent.payload.title} owner={modalEvent.payload.owner} url={modalEvent.payload.url} likes={modalEvent.payload.likes} dislikes={modalEvent.payload.dislikes} date={modalEvent.payload.date} comments={modalEvent.payload.comments} /></div>
+                <div className="posts-panel-modal"><PostPanel id={modalEvent.id} title={modalEvent.payload.title} owner={modalEvent.payload.owner} url={modalEvent.payload.url} likes={modalEvent.payload.likes} dislikes={modalEvent.payload.dislikes} date={modalEvent.payload.date} comments={modalEvent.payload.comments} /></div>
               </div>
             )
           }

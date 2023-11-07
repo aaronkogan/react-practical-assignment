@@ -1,7 +1,7 @@
 import "./EditPost.css";
 import  { fetchEditPost, postImg }  from "../services/Api";
 import Upload from "./Upload";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import { editPost, selectNewPostImg } from "../reducers/post";
 
@@ -18,7 +18,14 @@ const RedactPost = (props) => {
       } else { (title !== '' && title !== props.title && !pressed) ? setEnable(true) : setEnable(false); }
     } else setEnable(false);
   }, [title, props.title, imgPreload, pressed]);
-  const postEdit = async (query, id) => {
+  const sendImg = useCallback(async (postId) => {
+    const json = await postImg(postId);
+    if (json.success) {
+      json.result = { ...json.result, event: 'editPostPanel' };
+      dispatch(editPost(json.result));
+    }
+  },[dispatch]);
+  const postEdit = useCallback(async (query, id) => {
     if (title !== props.title) {
       const json = await fetchEditPost(query,id);
       json.success && (imgPreload !== 0) ?
@@ -28,19 +35,12 @@ const RedactPost = (props) => {
     } else {
       sendImg(JSON.stringify(props.id));
     }
-  };
-  const sendImg = async (postId) => {
-    const json = await postImg(postId);
-    if (json.success) {
-      json.result = { ...json.result, event: 'editPostPanel' };
-      dispatch(editPost(json.result));
-    }
-  };
-  const handleEditPost = () => {
+  },[dispatch, imgPreload, props.id, props.title, sendImg, title]);
+  const handleEditPost = useCallback(() => {
     setEnable(false);
     setPressed(true);
     postEdit(JSON.stringify({ title: title }), props.id);
-  };
+  },[postEdit, props.id, title]);
   return (
     <div className="EditPost">
       <input autoFocus name="input_title" placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)}></input>

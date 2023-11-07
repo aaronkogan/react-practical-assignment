@@ -7,7 +7,7 @@ import { selectUser } from '../reducers/user';
 import { deletePost, selectPostQuery, editPost } from "../reducers/post";
 import { hideCommentsEvent } from "../reducers/comments";
 import { useDispatch, useSelector } from "react-redux";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Modal from 'react-modal';
 
 const PostPanel = (props) => {
@@ -16,7 +16,6 @@ const PostPanel = (props) => {
   const postQuery = useSelector(selectPostQuery);
   const [Event, setEvent] = useState("hide");
   const isOwner = (user.name === props.owner);
-  const openInNewTab = url => { dispatch(hideCommentsEvent()) && window.open(url, '_blank', 'noopener,noreferrer') };
   useEffect(() => {
     if (postQuery.event === 'editPostPanel') {
       const json = JSON.parse(JSON.stringify(postQuery));
@@ -28,15 +27,15 @@ const PostPanel = (props) => {
       setEvent("hide");
     }
   }, [dispatch, postQuery, props.postQuery]);
-
-  const delPost = async (id) => {
+  const openInNewTab = useCallback((url) => { dispatch(hideCommentsEvent()) && window.open(url, '_blank', 'noopener,noreferrer') },[dispatch]);
+  const delPost =useCallback(async (id) => {
     const json = await postDelete(id);
     if (json.success) {
       json.result = { ...json.result, event: 'deletePost' };
       dispatch(deletePost(json.result));
       setEvent("hide");
     }
-  }
+  },[dispatch]);
   return (
     <div className="panel">{isOwner ?
       <div>

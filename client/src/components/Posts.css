@@ -32,18 +32,18 @@
 }
 
 .posts-panel {
-  padding-left: -25%;
-  justify-content: center;
-  position: center;
   display: flex;
-  flex-direction: row; 
+  bottom: -220px;
+  flex-direction: column;
+  position: relative;
+  justify-content: center;
+  align-items: center;
 }
 
 .posts-panel-modal {
   display: flex;
   flex-direction: column;
   position: relative;
-  padding-top: 40px;
   justify-content: center;
   align-items: center;
 }

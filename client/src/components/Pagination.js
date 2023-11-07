@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import  { fetchPosts }  from "../services/Api";
 import './Pagination.css';
 import { useDispatch, useSelector } from "react-redux";
@@ -8,10 +8,10 @@ const Pagination = ({ pagesCount }) => {
   const dispatch = useDispatch();
   const page = useSelector(selectPage);
   const search = useSelector(selectSearchQuery);
-  const pagePosts = async (query) => {
+  const pagePosts = useCallback(async (query) => {
     const json = await fetchPosts(query);
     json.success && dispatch(currentPage(json.page)) && dispatch(getPosts(json)) && window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
-  };
+  },[dispatch]);
   if (!search) {
     const pageNumbers = [];
     for (let i = 1; i <= pagesCount; i++) {
