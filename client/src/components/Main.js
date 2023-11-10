@@ -1,13 +1,13 @@
 import React from "react";
-import Posts from './Posts';
 import Header from './Header';
 import Search from './Search';
 import AddPost from './PostAdd';
+import PostsContainer from "./PostsContainer";
 
 const Main = () => {
   return (
     <div>
-      <Header /><Search /><AddPost /><Posts />
+      <Header /><Search /><AddPost /><PostsContainer />
     </div>
   );
 };

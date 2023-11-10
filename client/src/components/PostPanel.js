@@ -2,7 +2,7 @@ import "./PostPanel.css";
 import  { postDelete }  from "../services/Api";
 import RedactPost from './EditPost';
 import PostRate from './PostRate';
-import Comments from "./Comments";
+import CommentsContainer from "./CommentsContainer";
 import { selectUser } from '../reducers/user';
 import { deletePost, selectPostQuery, editPost } from "../reducers/post";
 import { hideCommentsEvent } from "../reducers/comments";
@@ -42,13 +42,13 @@ const PostPanel = (props) => {
         <button onClick={e => e.currentTarget === e.target && dispatch(hideCommentsEvent()) && setEvent("editPost")} title="Edit post">&#9997;</button>
         <button onClick={e => e.currentTarget === e.target && dispatch(hideCommentsEvent()) && setEvent("deletePost")} title="Delete post">&#128465;</button>
         <PostRate id={props.id} title={props.title} likes={props.likes} dislikes={props.dislikes} />
-        <Comments id={props.id} user={user} title={props.title} owner={props.owner} url={props.url} date={props.date} comments={props.comments} />
+        <CommentsContainer id={props.id} user={user} title={props.title} owner={props.owner} url={props.url} date={props.date} comments={props.comments} />
         <button title="Open picture in new tab" onClick={e => e.currentTarget === e.target && openInNewTab(props.url)}>&#128444;</button>
       </div>
       :
       <div>
         <PostRate id={props.id} title={props.title} likes={props.likes} dislikes={props.dislikes} username={props.owner} />
-        <Comments id={props.id} title={props.title} owner={props.owner} url={props.url} date={props.date} comments={props.comments} />
+        <CommentsContainer id={props.id} title={props.title} owner={props.owner} url={props.url} date={props.date} comments={props.comments} />
         <button title="Open picture in new tab" onClick={e => e.currentTarget === e.target && openInNewTab(props.url)}>&#128444;</button></div>}
       <Modal onRequestClose={e => e.currentTarget === e.target && setEvent("hide")} isOpen={Event !== "hide"} className="panelModal" appElement={document.getElementById('root') || undefined}>
         {(() => {
