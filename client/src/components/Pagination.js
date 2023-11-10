@@ -2,7 +2,7 @@ import React, { useCallback } from 'react'
 import  { fetchPosts }  from "../services/Api";
 import './Pagination.css';
 import { useDispatch, useSelector } from "react-redux";
-import { currentPage, selectPage, selectSearchQuery, getPosts } from "../reducers/posts";
+import { currentPage, selectPage, selectSearchQuery, getPosts, updatePosts } from "../reducers/posts";
 
 const Pagination = ({ pagesCount }) => {
   const dispatch = useDispatch();
@@ -10,7 +10,10 @@ const Pagination = ({ pagesCount }) => {
   const search = useSelector(selectSearchQuery);
   const pagePosts = useCallback(async (query) => {
     const json = await fetchPosts(query);
-    json.success && dispatch(currentPage(json.page)) && dispatch(getPosts(json)) && window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+    json.success && dispatch(currentPage(json.page));
+    dispatch(getPosts(json));
+    dispatch(updatePosts(true));
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
   },[dispatch]);
   if (!search) {
     const pageNumbers = [];

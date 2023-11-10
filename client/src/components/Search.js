@@ -23,9 +23,11 @@ class Search extends Component {
         json.success && this.props.getPosts(json);
         this.props.currentPage(json.totalPages);
         this.props.searchQuery(this.state.query);
+        this.props.updatePosts(true);
       } else if (!(query[0] === ('/') || query[0] === ('\\') || query[0] === ('%') || query === undefined)) {
         const json = await fetchSearch(query);
-        json.success && this.props.searchPosts(json) && this.props.searchQuery(this.state.query);      
+        json.success && this.props.searchPosts(json) && this.props.searchQuery(this.state.query); 
+        this.props.updatePosts(true);     
       }
     }
   }
@@ -55,6 +57,9 @@ const mapDispatchToProps = dispatch => ({
   ),
   getPosts: (json) => (
     dispatch({ type: "posts/getPosts", payload: json })
+  ),
+  updatePosts: (json) => (
+    dispatch({ type: "posts/updatePosts", payload: json })
   ),
   currentPage: (json) => (
     dispatch({ type: "posts/currentPage", payload: json })

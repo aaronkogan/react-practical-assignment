@@ -11,7 +11,7 @@ const PostsModal = (props) => {
   const dispatch = useDispatch();
 
   return (
-    <Modal onRequestClose={dispatch(editPost({event: 'hidePostModal'}))}isOpen={modalEvent.Event !== "hide"} className={`main-modal-${modalEvent.Event}`} appElement={document.getElementById('root') || undefined}>
+    <Modal onRequestClose={dispatch(editPost({event: 'hidePostModal'}))} isOpen={modalEvent.Event !== "hide" && modalEvent.Event !== "parseProcess"} className={`main-modal-${modalEvent.Event}`} appElement={document.getElementById('root') || undefined}>
     {(() => {
       if (modalEvent.Event === "fullscreen") {
         return (
