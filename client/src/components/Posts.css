@@ -33,6 +33,7 @@
 
 .posts-panel {
   display: flex;
+  bottom: -225px;
   flex-direction: column;
   position: relative;
   justify-content: center;
@@ -70,18 +71,4 @@
   overflow: auto;
   max-width: 80vw;
   max-height: 80vh;
-}
-
-@media screen and (min-width: 150px) {
-
-	.posts-panel {
-		bottom: -345px;
-	}
-}
-
-@media screen and (min-width: 740px) {
-
-	.posts-panel {
-		bottom: -205px;
-	}
 }

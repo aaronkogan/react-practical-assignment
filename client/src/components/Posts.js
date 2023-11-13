@@ -3,10 +3,10 @@ import isTouchScreenDevice from "../utils/TouchScreenDetect";
 import Pagination from "./Pagination";
 import PostPanel from "./PostPanel";
 import PostsModal from "./PostsModal";
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from "react-redux";
 import { getPosts, updatePosts, selectPages, } from "../reducers/posts";
-import { editPost, selectPostQuery } from "../reducers/post";
+import { editPost } from "../reducers/post";
 import { selectCommentsQuery, resetCommentsEvent } from "../reducers/comments";
 
 const Posts = (props) => {
@@ -80,7 +80,7 @@ const Posts = (props) => {
             key={post[0]}>{(hoverId === post[0] || isTouchScreenDevice()) &&
               <div>
                 <div onClick={e => e.currentTarget === e.target && dispatch(editPost({event: 'showPostsModal', payload: { id: post[0], title: post[1], owner: post[2], url: post[3], likes: post[4], dislikes: post[5], date: post[6], comments: post[7] }}))}>
-                    {post[0]}<br/>{post[6]}<br />{post[1]} by {post[2]}
+                    {post[6]}<br />{post[1]} by {post[2]}
                 </div>
                 <div className="posts-panel">
                   <PostPanel id={post[0]} title={post[1]} owner={post[2]} url={post[3]} likes={post[4]} dislikes={post[5]} date={post[6]} comments={post[7]} />
