@@ -47,7 +47,7 @@
   align-items: center;
 }
 
-.main-modal-fullscreen {
+.main-modal {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -62,7 +62,7 @@
   background-color: #b6bba0a2;
 }
 
-.main-modal-fullscreen-img {
+.main-modal-img {
   display: flex;
   overflow: scroll;
   scroll-behavior: smooth;

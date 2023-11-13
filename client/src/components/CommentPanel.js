@@ -13,18 +13,18 @@ const CommentPanel = (props) => {
   const [localEvent, setLocalEvent] = useState("hide");
   const isOwner = (user.name === props.owner);
   useEffect(() => {
-   (commentsQuery.event === 'hideCommentPanelModal') && dispatch(resetCommentsEvent()) && setLocalEvent("hide") 
+  if (commentsQuery.event === 'hideCommentPanelModal') { dispatch(resetCommentsEvent()); setLocalEvent("hide") }
    if (commentsQuery.event === 'editCommentPanelModal') {
     const json = JSON.parse(JSON.stringify(commentsQuery));
     delete json['event'];
     json.event = 'editCommentPanel';
-    dispatch(deleteComment(json)) && setLocalEvent("hide");
+    dispatch(deleteComment(json)); setLocalEvent("hide");
    }
    if (commentsQuery.event === 'deleteCommentPanelModal') {
     const json = JSON.parse(JSON.stringify(commentsQuery));
     delete json['event'];
     json.event = 'deleteCommentPanel';
-    dispatch(deleteComment(json)) && setLocalEvent("hide");
+    dispatch(deleteComment(json)); setLocalEvent("hide");
    }
   },[dispatch, commentsQuery.event, commentsQuery]);
   const isInArray = useCallback((list) => {

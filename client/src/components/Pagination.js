@@ -11,8 +11,7 @@ const Pagination = ({ pagesCount }) => {
   const pagePosts = useCallback(async (query) => {
     const json = await fetchPosts(query);
     json.success && dispatch(currentPage(json.page));
-    dispatch(getPosts(json));
-    dispatch(updatePosts(true));
+    dispatch(getPosts(json)); dispatch(updatePosts(true));
     window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
   },[dispatch]);
   if (!search) {

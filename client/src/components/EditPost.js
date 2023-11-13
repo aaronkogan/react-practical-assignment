@@ -31,7 +31,7 @@ const RedactPost = (props) => {
       json.success && (imgPreload !== 0) ?
       sendImg(JSON.stringify(json.result.id))
         :
-        ((json.result = { ...json.result, event: 'editPostPanel' }) && dispatch(editPost(json.result)));
+      ((json.result = { ...json.result, event: 'editPostPanel' }) && dispatch(editPost(json.result)));
     } else {
       sendImg(JSON.stringify(props.id));
     }

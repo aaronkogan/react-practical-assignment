@@ -15,9 +15,9 @@ const Comments = (props) => {
   const [showComments, setShowComments] = useState(false);
   const [localEvent, setLocalEvent] = useState("hide");
   const handleShowComments = useCallback(() => { (!showComments) ? setLocalEvent("showComments") : setLocalEvent("hideComments")  },[showComments]);
-  const handleClickNewComment = useCallback(() => { (setLocalEvent("newCommentModal")) && setShowComments(false) },[]);
+  const handleClickNewComment = useCallback(() => { (setLocalEvent("newCommentModal")); setShowComments(false) },[]);
   useEffect(() => {
-    (commentsQuery.event === 'hideNewCommentsModal') && (dispatch(resetCommentsEvent())) && setLocalEvent("hide") ; 
+    if (commentsQuery.event === 'hideNewCommentsModal') { (dispatch(resetCommentsEvent())); setLocalEvent("hide") }; 
     if (commentsQuery.event === 'addCommentPanel' && commentsQuery.postId === props.id) {
       const json = JSON.parse(JSON.stringify(commentsQuery));
       delete json['event'];
@@ -53,9 +53,9 @@ const Comments = (props) => {
       setComments(commentsMap);
       dispatch(editComment({ postId: props.id, username: props.owner, comments: [...commentsMap], event: String(commentsQuery.event).slice(0, -5) }));
     }
-    if (commentsQuery.event === 'hideComments') { setShowComments(false) && dispatch(resetCommentsEvent()) }
-    if (localEvent === "showComments") { setShowComments(true) && setLocalEvent("hide") }
-    if (localEvent === "hideComments") { setShowComments(false) && setLocalEvent("hide") }
+    if (commentsQuery.event === 'hideComments') { setShowComments(false); dispatch(resetCommentsEvent()) }
+    if (localEvent === "showComments") { setShowComments(true); setLocalEvent("hide") }
+    if (localEvent === "hideComments") { setShowComments(false); setLocalEvent("hide") }
   }, [localEvent, user.name, props.id, props.postId, props.owner, commentsQuery, dispatch, comments]);
   
   return (

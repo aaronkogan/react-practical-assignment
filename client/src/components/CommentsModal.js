@@ -19,7 +19,7 @@ const CommentsModal = (props) => {
         const json = await addComment(query);
         if (json.success) {
           json.result = { ...json.result, event: 'addCommentPanel' };
-          dispatch(newComment(json.result)) && handleHideNewComment();
+          dispatch(newComment(json.result)); handleHideNewComment();
         }
       },[dispatch, handleHideNewComment]);
     const handleNewComment  = useCallback(() => {

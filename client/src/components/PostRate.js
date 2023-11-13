@@ -18,17 +18,17 @@ const PostRate = (props) => {
             dispatch(hideCommentsEvent());
             const json = JSON.parse(JSON.stringify(postQuery));
             json['event'] = String(postQuery.event).slice(0, -4);
-            dispatch(editPost(json));
-            setLikes([...postQuery.likes]);
-            setDislikes([...postQuery.dislikes]);
+            dispatch(editPost(json)); setLikes([...postQuery.likes]); setDislikes([...postQuery.dislikes]);
         }
         const postEditLike = async (query, id) => {
             const json = await fetchEditPost(query, id);
-            json.success && ((json.result = { ...json.result, event: 'editPostLikeRate' }) && dispatch(editPost(json.result))) && setLocalEvent("default");
+            json.success && (json.result = { ...json.result, event: 'editPostLikeRate' });
+            dispatch(editPost(json.result));  setLocalEvent("default");
         }
         const postEditDislike = async (query, id) => {
             const json = await fetchEditPost(query, id);
-            json.success && ((json.result = { ...json.result, event: 'editPostDislikeRate' }) && dispatch(editPost(json.result))) && setLocalEvent("default");
+            json.success && (json.result = { ...json.result, event: 'editPostDislikeRate' });
+            dispatch(editPost(json.result)); setLocalEvent("default");
         }
         (localEvent === "like") && postEditLike(JSON.stringify({ id: props.id, usename: props.username, title: props.title, likes: [...likes], dislikes: [...dislikes] }), props.id);
         (localEvent === "dislike") && postEditDislike(JSON.stringify({ id: props.id, usename: props.username, title: props.title, likes: [...likes], dislikes: [...dislikes] }), props.id);

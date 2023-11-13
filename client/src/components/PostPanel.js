@@ -27,7 +27,7 @@ const PostPanel = (props) => {
       setEvent("hide");
     }
   }, [dispatch, postQuery, props.postQuery]);
-  const openInNewTab = useCallback((url) => { dispatch(hideCommentsEvent()) && window.open(url, '_blank', 'noopener,noreferrer') },[dispatch]);
+  const openInNewTab = useCallback((url) => { dispatch(hideCommentsEvent()); window.open(url, '_blank', 'noopener,noreferrer') },[dispatch]);
   const delPost =useCallback(async (id) => {
     const json = await postDelete(id);
     if (json.success) {
